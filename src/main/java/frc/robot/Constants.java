@@ -86,7 +86,7 @@ public final class Constants {
         }
 
         //CANdle CAN ID
-        public static final int CANdleID = 36;
+        public static final int CANdleID = 21;
 
         //RGB values for LEDs
         public static final int[] saturatedGreen = { 0, 255, 0 }; 
