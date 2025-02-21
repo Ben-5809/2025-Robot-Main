@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -23,11 +22,11 @@ public class ElevatorSub extends SubsystemBase {
   private TalonFX leftElevatorMaster;
 
   //Voltage var
-  VoltageOut voltageRequest;
+  private VoltageOut voltageRequest;
 
   //Elevator distances
-  Distance currentLeftPos = Units.Inches.of(0);
-  Distance currentRightPos = Units.Inches.of(0);
+  private double currentLeftPos = 0;
+  private double currentRightPos = 0;
 
   //Position request for motion magic. First calculates voltage from PID. Second calculate motion magic profile from pos endpoint
   PositionVoltage positionRequest;
@@ -55,11 +54,11 @@ public class ElevatorSub extends SubsystemBase {
   }
 
   //Returns the distance of each motor in inches. If they are basically the same, all is good in da hood
-  public Distance getElevatorPosRight () {
-    return Units.Inches.of(rightElevatorFollower.getPosition().getValueAsDouble());
+  public double getElevatorPosRight () {
+    return rightElevatorFollower.getPosition().getValueAsDouble();
   }
-  public Distance getElevatorPosLeft () {
-    return Units.Inches.of(leftElevatorMaster.getPosition().getValueAsDouble());
+  public double getElevatorPosLeft () {
+    return leftElevatorMaster.getPosition().getValueAsDouble();
   }
 
   //Applies a small amount of voltage to the motors for testing purposes
@@ -89,9 +88,9 @@ public class ElevatorSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    currentRightPos = getElevatorPosRight();
-    currentLeftPos = getElevatorPosLeft();
-    SmartDashboard.putData("Right Elevator", (Sendable) currentRightPos);
-    SmartDashboard.putData("Left Elevator", (Sendable) currentLeftPos);
+    currentRightPos = getElevatorPosRight() * Constants.ElevatorCons.pulleyPitch * 1/6;
+    currentLeftPos = getElevatorPosLeft() * Constants.ElevatorCons.pulleyPitch * 1/6;
+    SmartDashboard.putNumber("Right Elevator", currentRightPos);
+    SmartDashboard.putNumber("Left Elevator", currentLeftPos);
   }
 }

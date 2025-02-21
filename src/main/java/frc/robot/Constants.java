@@ -17,9 +17,9 @@ import edu.wpi.first.units.measure.Distance;
 //Constants Class for quick change to vars
 public final class Constants {
     //Elavtor Subsystem Contstants and Config objects
-    public static final class ElevatorCons {
+    public static class ElevatorCons {
         //Motor config object for elevator drive motors. Will be applied to both
-        public static TalonFXConfiguration elevatorConfig;
+        public static TalonFXConfiguration elevatorConfig = new TalonFXConfiguration();
         static {
             //When no opperation is running, motors will default to brake mode
             elevatorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -37,7 +37,6 @@ public final class Constants {
             elevatorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
 
             //Rotations to Inches conversion
-            //NEED TO CHECK THIS VALUE!!!!!!!!!! RIGHT NOW IT IS THE GEAR RATIO (84/14), BUT IT MAY BE THE INPUT TO DRIVEN * PULLEY RATIO
             elevatorConfig.Feedback.SensorToMechanismRatio = 6; 
 
             //Motion Magic® gains
@@ -62,11 +61,14 @@ public final class Constants {
             elevatorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         }
         //Moter IDs
-        public static final int elevatorLeftID = 14;
-        public static final int elevatorRightID = 15;
+        public static final int elevatorLeftID = 13;
+        public static final int elevatorRightID = 14;
 
         //Test Voltage for testing purposes
         public static final double testVoltage = 0.12; //Target voltage for 60 rpm
+
+        //Elevator pulley pitch diameter
+        public static final double pulleyPitch = 7.0874330265;
 
         //Distances for reef heights
         public static final Distance L1 = Units.Inches.of(0);
@@ -112,7 +114,7 @@ public final class Constants {
         }
 
         //CAN ID for end effector Kraken
-        public static final int endEffectorID = 25;
+        public static final int endEffectorID = 15;
 
         //Digit port input for line breaker
         public static final int lineBreaker = 1;
