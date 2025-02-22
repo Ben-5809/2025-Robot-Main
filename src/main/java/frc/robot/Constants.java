@@ -25,14 +25,14 @@ public final class Constants {
             elevatorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             
             //Sets the motors to the correct orientation
-            elevatorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            elevatorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             //Adds upper and lower soft limits to the elevator 
-            elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+            /*elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
             elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units.Inches.of(67).in(Units.Inches);
             elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
             elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units.Inches.of(0).in(Units.Inches);
-
+            */
             //Sets the feedforward gravity to that of an elevator not a arm. This removes the cosine function from the feedforward calculation
             elevatorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
 
