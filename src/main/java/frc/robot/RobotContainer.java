@@ -83,8 +83,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         //Manual drive for the elevator 
-        driverController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 4));
-        driverController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -4));
+        driverController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 3));
+        driverController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -3));
 
         //Elevator controller commands
         driverController.leftTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L1));

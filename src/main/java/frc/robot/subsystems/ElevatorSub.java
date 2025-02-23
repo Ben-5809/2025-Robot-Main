@@ -28,6 +28,7 @@ public class ElevatorSub extends SubsystemBase {
   private double currentLeftPos = 0;
   private double currentRightPos = 0;
 
+
   //Position request for motion magic. First calculates voltage from PID. Second calculate motion magic profile from pos endpoint
   PositionVoltage positionRequest;
   MotionMagicVoltage motionRequest;
@@ -61,6 +62,11 @@ public class ElevatorSub extends SubsystemBase {
     return leftElevatorMaster.getPosition().getValueAsDouble();
   }
 
+  public void setPositionZero () {
+    leftElevatorMaster.setPosition(0);
+    rightElevatorFollower.setPosition(0);
+  }
+
   //Applies a small amount of voltage to the motors for testing purposes
   public void applyVoltage (double voltageApplied) {
     leftElevatorMaster.setControl(voltageRequest.withOutput(voltageApplied));
@@ -88,9 +94,9 @@ public class ElevatorSub extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    currentRightPos = getElevatorPosRight() * Constants.ElevatorCons.pulleyPitch * 1/6;
-    currentLeftPos = getElevatorPosLeft() * Constants.ElevatorCons.pulleyPitch * 1/6;
-    SmartDashboard.putNumber("Right Elevator", currentRightPos);
+    currentRightPos = getElevatorPosRight();
+    currentLeftPos = getElevatorPosLeft();
     SmartDashboard.putNumber("Left Elevator", currentLeftPos);
+    SmartDashboard.putNumber("Reight Elevator", currentRightPos);
   }
 }
