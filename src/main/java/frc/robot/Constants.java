@@ -65,7 +65,7 @@ public final class Constants {
         public static final int elevatorRightID = 14;
 
         //Test Voltage for testing purposes
-        public static final double testVoltage = 0.12; //Target voltage for 60 rpm
+        public static final double testVoltage = 0.12;
 
         //Elevator pulley pitch diameter
         public static final double pulleyPitch = 7.0874330265;
