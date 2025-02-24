@@ -7,17 +7,19 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.ElevatorSub;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import com.ctre.phoenix6.SignalLogger;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
 
-  private final ElevatorSub elevatorSub = new ElevatorSub();
-
   public Robot() {
     m_robotContainer = new RobotContainer();
+    SignalLogger.setPath("/media/sda1/");
   }
 
   @Override
@@ -26,14 +28,14 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
   public void disabledPeriodic() {}
 
   @Override
   public void disabledExit() {
-    
   }
 
   @Override
@@ -59,7 +61,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    SignalLogger.writeString("Fuck", "Big dick");
+  }
 
   @Override
   public void teleopExit() {}

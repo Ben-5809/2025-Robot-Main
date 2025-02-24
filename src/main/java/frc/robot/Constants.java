@@ -42,17 +42,17 @@ public final class Constants {
             //Motion Magic® gains
             elevatorConfig.Slot0.kG = 0;
             elevatorConfig.Slot0.kS = 0;
-            elevatorConfig.Slot0.kP = 5;
+            elevatorConfig.Slot0.kP = 3;
             elevatorConfig.Slot0.kI = 0;
             elevatorConfig.Slot0.kD = 0;
-            elevatorConfig.Slot0.kV = 100;
-            elevatorConfig.Slot0.kA = 200;
+            elevatorConfig.Slot0.kV = 60;
+            elevatorConfig.Slot0.kA = 120;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
             //Motion Magic® motion profile gains
-            elevatorConfig.MotionMagic.MotionMagicCruiseVelocity = 400;
-            elevatorConfig.MotionMagic.MotionMagicAcceleration = 800;
-            elevatorConfig.MotionMagic.MotionMagicJerk = 1600;
+            elevatorConfig.MotionMagic.MotionMagicCruiseVelocity = 200;
+            elevatorConfig.MotionMagic.MotionMagicAcceleration = 400;
+            elevatorConfig.MotionMagic.MotionMagicJerk = 800;
         }
         //Another set of motor configs for testing
         public static TalonFXConfiguration testConfigs = new TalonFXConfiguration();
