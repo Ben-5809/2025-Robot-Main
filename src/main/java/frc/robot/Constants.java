@@ -11,8 +11,6 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix.led.CANdleConfiguration;
 
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 
 //Constants Class for quick change to vars
 public final class Constants {
@@ -29,9 +27,9 @@ public final class Constants {
 
             //Adds upper and lower soft limits to the elevator 
             elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-            elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Units.Inches.of(0).in(Units.Inches);
+            elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
             elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-            elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Units.Inches.of(-53.6).in(Units.Inches);
+            elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -53.6;
             
             //Sets the feedforward gravity to that of an elevator not a arm. This removes the cosine function from the feedforward calculation
             elevatorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
@@ -71,11 +69,11 @@ public final class Constants {
         public static final double pulleyPitch = 7.0874330265;
 
         //Distances for reef heights
-        public static final Distance L1 = Units.Inches.of(0);
-        public static final Distance L2 = Units.Inches.of(0);
-        public static final Distance L3 = Units.Inches.of(-39);
-        public static final Distance L4 = Units.Inches.of(0);
-        public static final Distance home = Units.Inches.of(0);
+        public static final double L1 = -10;
+        public static final double L2 = -22;
+        public static final double L3 = -39;
+        public static final double L4 = -53.6;
+        public static final double home = 0;
     }
 
     public static class CANdleCons {

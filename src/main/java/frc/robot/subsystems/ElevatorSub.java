@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -85,8 +83,8 @@ public class ElevatorSub extends SubsystemBase {
   }
 
   //The only important function really. Creates a new setpoint for the motion profile
-  public void setPosition (Distance height) {
-    leftElevatorMaster.setControl(motionRequest.withPosition(height.in(Units.Inches)));
+  public void setPosition (double height) {
+    leftElevatorMaster.setControl(motionRequest.withPosition(height));
     rightElevatorFollower.setControl(new Follower(Constants.ElevatorCons.elevatorLeftID, true));
   }
 
