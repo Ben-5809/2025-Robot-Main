@@ -14,14 +14,16 @@ import frc.robot.Constants;
 public class CoralEndEffector extends SubsystemBase {
   //Motor and sensor setup
   private TalonFX endEffectorMotor;
-  private DigitalInput linebreaker;
+  private DigitalInput lineBreakerEndEffector;
+  private DigitalInput lineBreakerTrough;
 
   //Voltage var
   private VoltageOut voltageRequest;
 
   public CoralEndEffector() {
     endEffectorMotor = new TalonFX(Constants.CoralEndEffectorCons.endEffectorID);
-    linebreaker = new DigitalInput(Constants.CoralEndEffectorCons.endEffectorID);
+    lineBreakerEndEffector = new DigitalInput(Constants.CoralEndEffectorCons.lineBreakerEndEffector);
+    lineBreakerTrough = new DigitalInput(Constants.CoralEndEffectorCons.lineBreakerTrough);
 
     //Applying configs to kraken
     endEffectorMotor.getConfigurator().apply(Constants.CoralEndEffectorCons.endEffectorConfig);
@@ -39,8 +41,12 @@ public class CoralEndEffector extends SubsystemBase {
   }
 
   //Method to return status of linebreaker
-  public boolean getLinebreakerStatus () {
-    return linebreaker.get();
+  public boolean getLinebreakerEndEffectorStatus () {
+    return lineBreakerEndEffector.get();
+  }
+
+  public boolean getLinebreakerTroughStatus () {
+    return lineBreakerTrough.get();
   }
 
   //Applies a set voltage to the motors

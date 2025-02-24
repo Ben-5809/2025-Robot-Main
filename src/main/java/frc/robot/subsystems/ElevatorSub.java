@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -25,6 +26,9 @@ public class ElevatorSub extends SubsystemBase {
   //Elevator distances
   private double currentLeftPos = 0;
   private double currentRightPos = 0;
+
+  //Last position so I can signal log
+  private double lastHeight = 0;
 
   //Position request for motion magic. First calculates voltage from PID. Second calculate motion magic profile from pos endpoint
   PositionVoltage positionRequest;
@@ -86,6 +90,7 @@ public class ElevatorSub extends SubsystemBase {
   public void setPosition (double height) {
     leftElevatorMaster.setControl(motionRequest.withPosition(height));
     rightElevatorFollower.setControl(new Follower(Constants.ElevatorCons.elevatorLeftID, true));
+    lastHeight = height;
   }
 
   @Override
@@ -95,5 +100,8 @@ public class ElevatorSub extends SubsystemBase {
     currentLeftPos = getElevatorPosLeft();
     SmartDashboard.putNumber("Left Elevator", currentLeftPos);
     SmartDashboard.putNumber("Reight Elevator", currentRightPos);
+
+    SignalLogger.writeDouble("Motion Magic Setpoint", lastHeight);
+    SignalLogger.writeDouble("Current Elevator Pos", currentLeftPos);
   }
 }

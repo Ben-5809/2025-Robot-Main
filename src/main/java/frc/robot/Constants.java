@@ -115,7 +115,8 @@ public final class Constants {
         public static final int endEffectorID = 15;
 
         //Digit port input for line breaker
-        public static final int lineBreaker = 1;
+        public static final int lineBreakerEndEffector = 1;
+        public static final int lineBreakerTrough = 2;
 
         //Motor voltages
         public static final double intakeVoltage = 4.0;
