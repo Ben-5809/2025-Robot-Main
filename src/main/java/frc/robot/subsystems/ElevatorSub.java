@@ -28,7 +28,6 @@ public class ElevatorSub extends SubsystemBase {
   private double currentLeftPos = 0;
   private double currentRightPos = 0;
 
-
   //Position request for motion magic. First calculates voltage from PID. Second calculate motion magic profile from pos endpoint
   PositionVoltage positionRequest;
   MotionMagicVoltage motionRequest;

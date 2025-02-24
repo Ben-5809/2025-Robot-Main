@@ -62,7 +62,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SignalLogger.writeString("Fuck", "Big dick");
   }
 
   @Override
