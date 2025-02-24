@@ -4,7 +4,6 @@
 
 package frc.robot.Commands;
 
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
@@ -14,9 +13,9 @@ public class ElevatorController extends Command {
   private final ElevatorSub elevatorSub;
   private final LEDsub ledSub;
   private final int[] colorApplied;
-  private final Distance height;
+  private final double height;
 
-  public ElevatorController(ElevatorSub elevatorSub, LEDsub ledSub, int[] colorApplied, Distance height) {
+  public ElevatorController(ElevatorSub elevatorSub, LEDsub ledSub, int[] colorApplied, double height) {
     //Connects the elevator sub to the passthrough in robotContainer
     this.elevatorSub = elevatorSub;
     this.ledSub = ledSub;
