@@ -80,18 +80,18 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        //drivetrain.registerTelemetry(logger::telemeterize);
 
         //Manual drive for the elevator 
-        driverController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 3));
-        driverController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -3));
+        driverController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
+        driverController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
 
         //Elevator controller commands
         driverController.leftTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L1));
         driverController.rightTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L2));
         driverController.leftBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3));
         driverController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4));
-        operatorController.a().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.home));
+        driverController.a().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.home));
     }
 
     public Command getAutonomousCommand() {
