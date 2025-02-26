@@ -80,7 +80,7 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        //drivetrain.registerTelemetry(logger::telemeterize);
+        drivetrain.registerTelemetry(logger::telemeterize);
 
         //Manual drive for the elevator 
         driverController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
