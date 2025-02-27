@@ -70,9 +70,9 @@ public final class Constants {
 
         //Distances for reef heights
         public static final double L1 = -10;
-        public static final double L2 = -19;
+        public static final double L2 = -17.5;
         public static final double L3 = -33;
-        public static final double L4 = -53.6;
+        public static final double L4 = -53.5;
         public static final double home = 0;
     }
 
