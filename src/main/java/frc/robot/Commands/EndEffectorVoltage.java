@@ -40,6 +40,7 @@ public class EndEffectorVoltage extends Command {
   @Override
   public void end(boolean interrupted) {
     ledSub.setLED(colorApplied);
+    coralEndEffector.setMotorVoltage(0);
   }
 
   // Returns true when the command should end.

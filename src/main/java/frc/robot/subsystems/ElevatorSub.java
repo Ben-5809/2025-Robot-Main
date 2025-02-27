@@ -93,6 +93,10 @@ public class ElevatorSub extends SubsystemBase {
     lastHeight = height;
   }
 
+  public double getLastHeight () {
+    return lastHeight;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -101,6 +105,7 @@ public class ElevatorSub extends SubsystemBase {
     SmartDashboard.putNumber("Left Elevator", currentLeftPos);
     SmartDashboard.putNumber("Reight Elevator", currentRightPos);
 
+    SignalLogger.writeDouble("Motion Profile", leftElevatorMaster.getClosedLoopReference().getValueAsDouble());
     SignalLogger.writeDouble("Motion Magic Setpoint", lastHeight);
     SignalLogger.writeDouble("Current Elevator Pos", currentLeftPos);
   }

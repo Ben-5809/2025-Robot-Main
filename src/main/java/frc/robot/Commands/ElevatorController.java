@@ -4,6 +4,7 @@
 
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
@@ -41,11 +42,18 @@ public class ElevatorController extends Command {
   @Override
   public void end(boolean interrupted) {
     ledSub.setLED(colorApplied);
+    elevatorSub.applyVoltage(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (elevatorSub.getElevatorPosLeft() > (height - 0.003) &&  elevatorSub.getElevatorPosLeft() < (height + 0.003)) {
+      return true;
+      
+    }
+    else { 
+      return false;
+    }
   }
 }
