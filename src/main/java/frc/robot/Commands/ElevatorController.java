@@ -6,15 +6,17 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
+import frc.robot.Commands.EndEffectorVoltage;
 
 public class ElevatorController extends Command {
   //Declarations of the elevator sub
   private final ElevatorSub elevatorSub;
   private final LEDsub ledSub;
   private final int[] colorApplied;
-  private final double height;
+  private final double height;;
 
   public ElevatorController(ElevatorSub elevatorSub, LEDsub ledSub, int[] colorApplied, double height) {
     //Connects the elevator sub to the passthrough in robotContainer
@@ -48,7 +50,7 @@ public class ElevatorController extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (elevatorSub.getElevatorPosLeft() > (height - 0.003) &&  elevatorSub.getElevatorPosLeft() < (height + 0.003)) {
+    if (elevatorSub.getElevatorPosLeft() > (height - 0.004) &&  elevatorSub.getElevatorPosLeft() < (height + 0.004)) {
       return true;
       
     }
