@@ -70,8 +70,8 @@ public final class Constants {
 
         //Distances for reef heights
         public static final double L1 = -10;
-        public static final double L2 = -22;
-        public static final double L3 = -39;
+        public static final double L2 = -19;
+        public static final double L3 = -33;
         public static final double L4 = -53.6;
         public static final double home = 0;
     }
@@ -108,7 +108,7 @@ public final class Constants {
             //Sets the neutral mode of endeffector motor to brake. This is so coral does not slip out
             endEffectorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             //Sets it to inverted. This is because of the belting 
-            endEffectorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+            endEffectorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         }
 
         //CAN ID for end effector Kraken

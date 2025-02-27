@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
 
@@ -42,6 +43,7 @@ public class RobotContainer {
     //Subs
     private final ElevatorSub elevatorSub = new ElevatorSub();
     private final LEDsub ledSub = new LEDsub();
+    private final CoralEndEffector coralEndEffector = new CoralEndEffector();
 
     public RobotContainer() {
         configureBindings();
@@ -83,15 +85,20 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         //Manual drive for the elevator 
-        driverController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
-        driverController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
+        operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
+        operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
+
+        driverController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.5));
+        driverController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 0));
+        driverController.x().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -1.5));
+        driverController.start().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 4));
 
         //Elevator controller commands
         driverController.leftTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L1));
         driverController.rightTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L2));
         driverController.leftBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3));
         driverController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4));
-        driverController.a().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.home));
+        driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.home));
     }
 
     public Command getAutonomousCommand() {
