@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 
 //Constants Class for quick change to vars
@@ -38,7 +39,7 @@ public final class Constants {
             elevatorConfig.Feedback.SensorToMechanismRatio = 1/6; 
 
             //Motion Magic® gains
-            elevatorConfig.Slot0.kG = 0;
+            elevatorConfig.Slot0.kG = 0.2;
             elevatorConfig.Slot0.kS = 0.44;
             elevatorConfig.Slot0.kP = 2.4;
             elevatorConfig.Slot0.kI = 0;
@@ -80,7 +81,8 @@ public final class Constants {
         public static final CANdleConfiguration LedConfig = new CANdleConfiguration();
         static {
             //Sets brightness from 0 to 1
-            LedConfig.brightnessScalar = 1;
+            LedConfig.brightnessScalar = .5;
+            LedConfig.stripType = LEDStripType.RGB;
         }
 
         //CANdle CAN ID
