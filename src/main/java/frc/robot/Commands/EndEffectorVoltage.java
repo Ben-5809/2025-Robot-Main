@@ -46,7 +46,7 @@ public class EndEffectorVoltage extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (coralEndEffector.getLinebreakerEndEffectorStatus() == false) {
+    if (coralEndEffector.getLinebreakerEndEffectorStatus() == true) {
       return true;
     }
     else {

@@ -39,7 +39,7 @@ public final class Constants {
             elevatorConfig.Feedback.SensorToMechanismRatio = 1/6; 
 
             //Motion Magic® gains
-            elevatorConfig.Slot0.kG = 0.2;
+            elevatorConfig.Slot0.kG = 0.45;
             elevatorConfig.Slot0.kS = 0.44;
             elevatorConfig.Slot0.kP = 2.4;
             elevatorConfig.Slot0.kI = 0;
@@ -75,6 +75,13 @@ public final class Constants {
         public static final double L3 = -33;
         public static final double L4 = -53.5;
         public static final double home = 0;
+
+        //Dis tances V2
+        public static final double L1V2 = -10;
+        public static final double L2V2 = -17.2;
+        public static final double L3V2 = -30.3;
+        public static final double L4V2 = -52.6;
+        public static final double homeV2 = 0;
     }
 
     public static class CANdleCons {
