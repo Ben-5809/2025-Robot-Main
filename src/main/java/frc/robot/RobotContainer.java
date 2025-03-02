@@ -90,6 +90,11 @@ public class RobotContainer {
         //Manual drive for the elevator 
         operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
         operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
+        operatorController.a().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedPink, -6));
+        operatorController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedPurple, 0));
+
+        //Alvin: "Baclshots! Backshots! Backshots!"
+        operatorController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkGreen, -19.8).andThen(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedPink, -2)));
 
         driverController.a().onTrue(new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.5));
         driverController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 0));

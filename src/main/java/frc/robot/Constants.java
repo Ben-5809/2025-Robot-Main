@@ -133,4 +133,13 @@ public final class Constants {
         public static final double midLVoltage = 4.0;
         public static final double L4Voltage = 4.0;
     }
+
+    public static class poseEstimatorCons {
+        public static final String leftCamera = "limelight-left";
+        public static final String rightCamera = "limelight-right";
+
+        public static final double autoVisionStdDevs = 10;
+        public static final double teleopVisionStdDevs = 0.01;
+        public static final double aimVisionStdDevs = 0.01;
+    }
 }
