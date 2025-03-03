@@ -50,7 +50,7 @@ public class ElevatorController extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (elevatorSub.getElevatorPosLeft() > (height - 0.15) &&  elevatorSub.getElevatorPosLeft() < (height + 0.15)) {
+    if (elevatorSub.getElevatorPosLeft() > (height - 0.1) &&  elevatorSub.getElevatorPosLeft() < (height + 0.1)) {
       return true;
       
     }

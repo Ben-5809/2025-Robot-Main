@@ -24,13 +24,13 @@ public final class Constants {
             elevatorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
             
             //Sets the motors to the correct orientation
-            elevatorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            elevatorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             //Adds upper and lower soft limits to the elevator 
             elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-            elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0;
+            elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 52.7;
             elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-            elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -53.6;
+            elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
             
             //Sets the feedforward gravity to that of an elevator not a arm. This removes the cosine function from the feedforward calculation
             elevatorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
@@ -39,6 +39,15 @@ public final class Constants {
             elevatorConfig.Feedback.SensorToMechanismRatio = 1/6; 
 
             //Motion Magic® gains
+            elevatorConfig.Slot0.kG = 0.19;
+            elevatorConfig.Slot0.kS = 0.23;
+            elevatorConfig.Slot0.kP = 2.0;
+            elevatorConfig.Slot0.kI = 0.0;
+            elevatorConfig.Slot0.kD = 0.02;
+            elevatorConfig.Slot0.kV = 0.138;
+            elevatorConfig.Slot0.kA = 0.002;
+            elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+            /* 
             elevatorConfig.Slot0.kG = 0.45;
             elevatorConfig.Slot0.kS = 0.44;
             elevatorConfig.Slot0.kP = 2.4;
@@ -47,7 +56,7 @@ public final class Constants {
             elevatorConfig.Slot0.kV = 0.17;
             elevatorConfig.Slot0.kA = 0;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-
+            */
             //Motion Magic® motion profile gains
             elevatorConfig.MotionMagic.MotionMagicCruiseVelocity = 52;
             elevatorConfig.MotionMagic.MotionMagicAcceleration = 120;
@@ -57,7 +66,7 @@ public final class Constants {
         public static TalonFXConfiguration testConfigs = new TalonFXConfiguration();
         static {
             testConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-            elevatorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            elevatorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         }
         //Moter IDs
         public static final int elevatorLeftID = 13;
@@ -69,19 +78,13 @@ public final class Constants {
         //Elevator pulley pitch diameter
         public static final double pulleyPitch = 7.0874330265;
 
-        //Distances for reef heights
-        public static final double L1 = -10;
-        public static final double L2 = -17.5;
-        public static final double L3 = -33;
-        public static final double L4 = -53.5;
+    
+        //Dis tances 
+        public static final double L1 = 10;
+        public static final double L2 = 17.2;
+        public static final double L3 = 30.3;
+        public static final double L4 = 52.55;
         public static final double home = 0;
-
-        //Dis tances V2
-        public static final double L1V2 = -10;
-        public static final double L2V2 = -17.2;
-        public static final double L3V2 = -30.3;
-        public static final double L4V2 = -52.6;
-        public static final double homeV2 = 0;
     }
 
     public static class CANdleCons {
