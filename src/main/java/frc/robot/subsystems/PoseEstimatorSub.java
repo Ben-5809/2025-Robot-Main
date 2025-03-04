@@ -53,7 +53,7 @@ public class PoseEstimatorSub extends SubsystemBase {
             Constants.Swerve.swerveKinematics,
             getGyroYaw(),
             swerveSub.getState().ModulePositions,
-            getCloseSpeakerPose()
+            getStartingReefPose()
         );
     }
 
@@ -77,13 +77,18 @@ public class PoseEstimatorSub extends SubsystemBase {
         poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(translation, getPose().getRotation()));
     }
 
-    public void resetPoseToCloseSpeaker() {
-        setPoseTranslation(getCloseSpeakerPose());
-    }
-    
     public Rotation2d getHeading() {
         return getPose().getRotation();
     }
+
+    public Pose2d getStartingReefPose() {
+      var alliance = DriverStation.getAlliance();
+      if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+          return Constants.VisionConstants.redReefStartPose;
+      } else {
+          return Constants.VisionConstants.blueReefStartPose;
+      }
+  }
 
     public Rotation2d getHeadingFieldOriented() {
         var alliance = DriverStation.getAlliance();
@@ -134,89 +139,6 @@ public class PoseEstimatorSub extends SubsystemBase {
         return tagCount;
     }
 
-    public Pose2d getReefPoseRight() {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                return Constants.poseEstimatorCons.redCloseSpeakerPose;
-            } else {
-                return Constants.poseEstimatorCons.blueCloseSpeakerPose;
-            }
-        }
-        else return Constants.poseEstimatorCons.blueCloseSpeakerPose;
-    }
-
-    public Pose2d getSpeakerPoseYaw() {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                return Constants.poseEstimatorCons.redSpeakerPoseYaw;
-            } else {
-                return Constants.poseEstimatorCons.blueSpeakerPoseYaw;
-            }
-        }
-        else return Constants.poseEstimatorCons.blueSpeakerPoseYaw;
-    }
-
-    public Pose2d getSpeakerPoseDistance() {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-            if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                return Constants.poseEstimatorCons.redSpeakerPoseDistance;
-            } else {
-                return Constants.poseEstimatorCons.blueSpeakerPoseDistance;
-            }
-        }
-        else return Constants.poseEstimatorCons.blueSpeakerPoseYaw;
-    }
-
-    public boolean getValidSpeaker() {
-        if (LimelightHelpers.getTV("limelight-Shooter") == true) return true;
-        else return false;
-    }
-
-    public double getSpeakerTX() {
-        return LimelightHelpers.getTX("limelight-shooter");
-    }
-
-    public double getSpeakerTY() {
-        return LimelightHelpers.getTY("limelight-shooter");
-    }
-
-    public double getCameraSpeakerDistance() {
-        return (
-            (Constants.poseEstimatorCons.speakerTagHeight - Constants.poseEstimatorCons.cameraHeight) /
-            Math.tan(Math.PI / 180 * (
-                30 + getSpeakerTY()
-            ))
-        );
-    }
-  
-    public double getSpeakerYaw() {
-        double yaw = (getPose().getRotation().getDegrees() - 90 + (180 / Math.PI * Math.acos(
-            (
-                Math.pow(getCameraSpeakerDistance(), 2) - 
-                Math.pow(getSpeakerDistance(), 2) -
-                Math.pow(Constants.poseEstimatorCons.cameraOffset, 2)
-            ) / (
-                -2 * getCameraSpeakerDistance() * getSpeakerDistance()
-            )
-        )));
-
-        yaw = getPose().getRotation().getDegrees() - LimelightHelpers.getTX("limelight-shooter");
-
-        if (yaw > 180) return yaw - 360;
-        else if (yaw <= -180) return yaw + 360;
-        else return yaw;
-    }  
-    
-    public double getSpeakerDistance() {
-        return Math.sqrt(
-            Math.pow(getPose().getX() - getSpeakerPoseDistance().getX(), 2) +
-            Math.pow(getPose().getY() - getSpeakerPoseDistance().getY(), 2) + .2
-        );
-    }
-
     public void update() {
         poseEstimator.update(getGyroYaw(), swerveSub.getState().ModulePositions);
 
@@ -242,7 +164,7 @@ public class PoseEstimatorSub extends SubsystemBase {
         
         SmartDashboard.putData("Field", field);
 
-        SmartDashboard.putNumber("Speaker Distance", getSpeakerDistance());
+        SmartDashboard.putNumber("Speaker Distance", getStartingReefPose());
     }
 
     @Override 

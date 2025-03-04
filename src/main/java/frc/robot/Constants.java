@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -159,6 +160,18 @@ public final class Constants {
         public static final double ROTATE_D = 0.000100;
 
         public static final double TOLERANCE = 0.01;
+
+        //Tag ID 11
+        public static final Pose2d redReefStartPose = new Pose2d(
+            new Translation2d(12.425, 2.925),
+            new Rotation2d()
+        );
+
+        //Tag ID 20
+        public static final Pose2d blueReefStartPose = new Pose2d(
+            new Translation2d(5.125, 5.125),
+            new Rotation2d()
+        );
     }
 
     public static final class Swerve {
