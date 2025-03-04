@@ -44,7 +44,7 @@ public final class Constants {
             elevatorConfig.Slot0.kP = 2.0;
             elevatorConfig.Slot0.kI = 0.0;
             elevatorConfig.Slot0.kD = 0.02;
-            elevatorConfig.Slot0.kV = 0.138;
+            elevatorConfig.Slot0.kV = 0.145;
             elevatorConfig.Slot0.kA = 0.002;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
             /* 
@@ -144,5 +144,20 @@ public final class Constants {
         public static final double autoVisionStdDevs = 10;
         public static final double teleopVisionStdDevs = 0.01;
         public static final double aimVisionStdDevs = 0.01;
+    }
+
+    public static class VisionConstants {
+        public static final String limelightName = "limelight-left";
+
+        
+        public static final double MOVE_P = 0.300000;
+        public static final double MOVE_I = 0.000000;
+        public static final double MOVE_D = 0.000600;
+
+        public static final double ROTATE_P = 0.030000;
+        public static final double ROTATE_I = 0.000000;
+        public static final double ROTATE_D = 0.000100;
+
+        public static final double TOLERANCE = 0.01;
     }
 }

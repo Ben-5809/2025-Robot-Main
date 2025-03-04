@@ -6,34 +6,64 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.libaries.LimelightHelpers;
+import frc.robot.libaries.LimelightHelpers.RawFiducial;
 
 public class VisionSubsystem extends SubsystemBase {
-  double x;
-  double y;
-  double area;
+ private RawFiducial[] fiducials;
 
   //read values periodically
 
-  public VisionSubsystem() {}
-
-  public double getTX () {
-    return x = LimelightHelpers.getTX("limelight-left");
+  public VisionSubsystem() {
+    config();
   }
 
-  public double getTY () {
-    return y = LimelightHelpers.getTY("limelight-left");
+  public static class NoSuchTargetException extends RuntimeException { //No fiducial fonund
+    public NoSuchTargetException(String message) {
+      super(message);
+    }
   }
 
-  public double getTA () {
-    return area = LimelightHelpers.getTA("limelight-left");
+  public void config() {
+    LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.limelightName, new int[] {6,7,8,9,10,11,17,18,19,20,21,22});
+
+    SmartDashboard.putNumber("Rotate P", 0.0);
+    SmartDashboard.putNumber("Rotate D", 0.0);
+
   }
-  
+
   @Override
   public void periodic() {
-    //post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+    fiducials = LimelightHelpers.getRawFiducials(Constants.VisionConstants.limelightName);
   }
+  public RawFiducial getClosestFiducial() {
+    if (fiducials == null || fiducials.length == 0) {
+        throw new NoSuchTargetException("No fiducials found.");
+    }
+
+    RawFiducial closest = fiducials[0];
+    double minDistance = closest.ta;
+    //Linear search for close
+    for (RawFiducial fiducial : fiducials) {
+        if (fiducial.ta > minDistance) {
+            closest = fiducial;
+            minDistance = fiducial.ta;
+        }
+    }
+    return closest;
+  }
+  
+  //Linear searcgh by id
+  public RawFiducial getFiducialWithId(int id) {
+  
+    for (RawFiducial fiducial : fiducials) {
+        if (fiducial.id == id) {
+            return fiducial;
+        }
+    }
+    throw new NoSuchTargetException("Can't find ID: " + id);
+  }
+
+
 }
