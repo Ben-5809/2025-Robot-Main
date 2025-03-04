@@ -39,7 +39,7 @@ public final class Constants {
             elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
             elevatorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 52.7;
             elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-            elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+            elevatorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -0.125;
             
             //Sets the feedforward gravity to that of an elevator not a arm. This removes the cosine function from the feedforward calculation
             elevatorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
@@ -53,19 +53,10 @@ public final class Constants {
             elevatorConfig.Slot0.kP = 2.0;
             elevatorConfig.Slot0.kI = 0.0;
             elevatorConfig.Slot0.kD = 0.02;
-            elevatorConfig.Slot0.kV = 0.145;
+            elevatorConfig.Slot0.kV = 0.149;
             elevatorConfig.Slot0.kA = 0.002;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-            /* 
-            elevatorConfig.Slot0.kG = 0.45;
-            elevatorConfig.Slot0.kS = 0.44;
-            elevatorConfig.Slot0.kP = 2.4;
-            elevatorConfig.Slot0.kI = 0;
-            elevatorConfig.Slot0.kD = 0.02;
-            elevatorConfig.Slot0.kV = 0.17;
-            elevatorConfig.Slot0.kA = 0;
-            elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-            */
+           
             //Motion Magic® motion profile gains
             elevatorConfig.MotionMagic.MotionMagicCruiseVelocity = 52;
             elevatorConfig.MotionMagic.MotionMagicAcceleration = 120;
@@ -93,7 +84,7 @@ public final class Constants {
         public static final double L2 = 17.2;
         public static final double L3 = 30.3;
         public static final double L4 = 52.55;
-        public static final double home = 0;
+        public static final double home = -0.05;
     }
 
     public static class CANdleCons {

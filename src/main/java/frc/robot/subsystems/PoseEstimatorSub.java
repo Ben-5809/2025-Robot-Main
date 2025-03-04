@@ -1,7 +1,9 @@
 package frc.robot.subsystems;
 
-import frc.lib.util.LimelightHelpers;
+import frc.robot.libaries.LimelightHelpers;
 import frc.robot.Constants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -19,6 +21,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class PoseEstimatorSub extends SubsystemBase {
 
+
     public Pigeon2 gyro;
 
     public SwerveDrivePoseEstimator poseEstimator;
@@ -29,8 +32,6 @@ public class PoseEstimatorSub extends SubsystemBase {
 
     Field2d field = new Field2d();
 
-    private boolean autoNoteSeen;
-
     private int tagCount;
     
     public PoseEstimatorSub() {
@@ -40,8 +41,6 @@ public class PoseEstimatorSub extends SubsystemBase {
         gyro.setYaw(0);
 
         visionStdDevs = Constants.poseEstimatorCons.autoVisionStdDevs;
-
-        autoNoteSeen = false;
 
         tagCount = 0;
     }
@@ -59,7 +58,7 @@ public class PoseEstimatorSub extends SubsystemBase {
     }
 
     public Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValue());
+        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
     }
 
     public Pose2d getPose() {
@@ -67,15 +66,15 @@ public class PoseEstimatorSub extends SubsystemBase {
     }
 
     public void setPose(Pose2d pose) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions,, pose);
+        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, pose);
     }
 
     public void setPoseTranslation(Pose2d pose) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions,, new Pose2d(pose.getTranslation(), getPose().getRotation()));
+        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(pose.getTranslation(), getPose().getRotation()));
     }
 
     public void setPoseTranslation(Translation2d translation) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions,, new Pose2d(translation, getPose().getRotation()));
+        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(translation, getPose().getRotation()));
     }
 
     public void resetPoseToCloseSpeaker() {
@@ -135,7 +134,7 @@ public class PoseEstimatorSub extends SubsystemBase {
         return tagCount;
     }
 
-    public Pose2d getCloseSpeakerPose() {
+    public Pose2d getReefPoseRight() {
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
             if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
@@ -249,3 +248,4 @@ public class PoseEstimatorSub extends SubsystemBase {
     @Override 
     public void simulationPeriodic() {}
 }
+
