@@ -12,6 +12,11 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.*;
+import com.pathplanner.*;
+import com.pathplanner.lib.config.*;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -173,6 +178,24 @@ public final class Constants {
             new Rotation2d()
         );
     }
+
+    public static final class PathPlanner {
+        public static final HolonomicPathFollowerConfig pathPlannerConfig = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants( // Translation PID constants
+                5.0, 
+                0.0, 
+                0.0), 
+            new PIDConstants( // Rotation PID constants
+                5.0, 
+                0.0, 
+                0.0
+            ),
+            4.5,
+            .41,
+            new ReplanningConfig()
+        );
+    }
+
 
     public static final class Swerve {
 

@@ -20,8 +20,6 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 public class PoseEstimatorSub extends SubsystemBase {
-
-
     public Pigeon2 gyro;
 
     public SwerveDrivePoseEstimator poseEstimator;
@@ -143,11 +141,11 @@ public class PoseEstimatorSub extends SubsystemBase {
         poseEstimator.update(getGyroYaw(), swerveSub.getState().ModulePositions);
 
         boolean rejectUpdate = false;
-        LimelightHelpers.SetRobotOrientation(Constants.poseEstimatorCons.shooterCamera, 
+        LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.limelightName, 
             getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.poseEstimatorCons.shooterCamera);
+        LimelightHelpers.PoseEstimate botPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.VisionConstants.limelightName);
         setTagCount(botPose.tagCount);
-        if (Math.abs(gyro.getRate()) > 720) rejectUpdate = true;
+        if (Math.abs(gyro.getAngularVelocityZWorld().getValueAsDouble()) > 720) rejectUpdate = true;
         if (botPose.tagCount == 0) rejectUpdate = true;
         if (rejectUpdate == false) {
             poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(getVisionStdDevs(), getVisionStdDevs(), 9999999));
