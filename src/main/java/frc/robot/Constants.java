@@ -180,20 +180,7 @@ public final class Constants {
     }
 
     public static final class PathPlanner {
-        public static final HolonomicPathFollowerConfig pathPlannerConfig = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-            new PIDConstants( // Translation PID constants
-                5.0, 
-                0.0, 
-                0.0), 
-            new PIDConstants( // Rotation PID constants
-                5.0, 
-                0.0, 
-                0.0
-            ),
-            4.5,
-            .41,
-            new ReplanningConfig()
-        );
+        
     }
 
 

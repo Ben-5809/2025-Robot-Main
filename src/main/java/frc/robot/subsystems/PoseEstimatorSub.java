@@ -161,8 +161,6 @@ public class PoseEstimatorSub extends SubsystemBase {
         update();
         
         SmartDashboard.putData("Field", field);
-
-        SmartDashboard.putNumber("Speaker Distance", getStartingReefPose());
     }
 
     @Override 
