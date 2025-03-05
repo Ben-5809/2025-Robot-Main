@@ -7,6 +7,9 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,6 +23,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
+import frc.robot.subsystems.PoseEstimatorSub;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
@@ -38,9 +42,9 @@ public class RobotContainer {
     private final CommandXboxController driverController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    //Subs
+    private final PoseEstimatorSub poseEstimatorSub = new PoseEstimatorSub();
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain(poseEstimatorSub);
     private final ElevatorSub elevatorSub = new ElevatorSub();
     private final LEDsub ledSub = new LEDsub();
     private final CoralEndEffector coralEndEffector = new CoralEndEffector();
@@ -79,8 +83,11 @@ public class RobotContainer {
         operatorController.start().and(operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
 
+
         
 
+        
+        operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Test ID 20"), new PathConstraints(2, 2, 6.28, 6.28)));
 
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -118,7 +125,7 @@ public class RobotContainer {
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
         
-        operatorController.rightTrigger(.8).whileTrue(new AlignCommand(drivetrain, visionSubsystem));
+        //operatorController.rightTrigger(.8).whileTrue(new AlignCommand(drivetrain, visionSubsystem));
 
 
         //operatorController.leftTrigger(0.9).(isManual == true);

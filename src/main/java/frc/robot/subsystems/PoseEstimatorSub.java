@@ -137,6 +137,15 @@ public class PoseEstimatorSub extends SubsystemBase {
         return tagCount;
     }
 
+    public Pose2d getReefPose() {
+      var alliance = DriverStation.getAlliance();
+      if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+          return Constants.VisionConstants.redReefStartPose;
+      } else {
+          return Constants.VisionConstants.blueReefStartPose;
+      }
+  }
+
     public void update() {
         poseEstimator.update(getGyroYaw(), swerveSub.getState().ModulePositions);
 
