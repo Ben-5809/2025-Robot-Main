@@ -86,8 +86,12 @@ public class RobotContainer {
 
         
 
+        try {
+            operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Test ID 20"), new PathConstraints(2, 2, 6.28, 6.28)));
+        } catch (Exception e) {
+            Commands.print(e.getMessage());
+        }
         
-        operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Test ID 20"), new PathConstraints(2, 2, 6.28, 6.28)));
 
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
