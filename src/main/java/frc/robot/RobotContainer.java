@@ -24,8 +24,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
-import frc.robot.subsystems.PoseEstimatorSub;
-import frc.robot.subsystems.VisionSubsystem;
+
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -44,12 +43,10 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(1);
 
 
-    private final PoseEstimatorSub poseEstimatorSub = new PoseEstimatorSub();
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain(poseEstimatorSub);
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSub elevatorSub = new ElevatorSub();
     private final LEDsub ledSub = new LEDsub();
     private final CoralEndEffector coralEndEffector = new CoralEndEffector();
-    private final VisionSubsystem visionSubsystem = new VisionSubsystem();
 
     public RobotContainer() {
         configureBindings();
@@ -98,7 +95,6 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-        operatorController.leftBumper().onTrue(new InstantCommand(() -> poseEstimatorSub.zeroHeading()));
         
 
 
