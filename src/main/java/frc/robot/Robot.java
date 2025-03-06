@@ -9,16 +9,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.net.PortForwarder;
 
+import com.ctre.phoenix6.hardware.*;
+
 
 import com.ctre.phoenix6.SignalLogger;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  private Pigeon2 gyro = new Pigeon2(51);
+
   private final RobotContainer m_robotContainer;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+
+    gyro.setYaw(180);
 
     for (int port = 5800; port <= 5809; port++) {
       PortForwarder.add(port, Constants.VisionConstants.limelightName, port);
