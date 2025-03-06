@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -66,6 +67,8 @@ public class RobotContainer {
             )
         );
 
+
+        
         /* 
         driverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
         driverController.b().whileTrue(drivetrain.applyRequest(() ->
@@ -87,7 +90,7 @@ public class RobotContainer {
         
 
         try {
-            operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Test ID 20"), new PathConstraints(2, 2, 6.28, 6.28)));
+            operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Test ID 18 Right"), new PathConstraints(2, 2, 6.28, 6.28)));
         } catch (Exception e) {
             Commands.print(e.getMessage());
         }
@@ -95,6 +98,10 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        operatorController.leftBumper().onTrue(new InstantCommand(() -> poseEstimatorSub.zeroHeading()));
+        
+
+
 
         drivetrain.registerTelemetry(logger::telemeterize);
 

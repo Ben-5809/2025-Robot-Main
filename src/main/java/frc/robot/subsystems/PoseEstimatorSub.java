@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,14 +50,15 @@ public class PoseEstimatorSub extends SubsystemBase {
       
         poseEstimator = new SwerveDrivePoseEstimator(
             Constants.Swerve.swerveKinematics,
-            getGyroYaw(),
+            getGyroYaw(1),
             swerveSub.getState().ModulePositions,
             getStartingReefPose()
         );
     }
 
-    public Rotation2d getGyroYaw() {
-        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
+    public Rotation2d getGyroYaw(int zeroTemp) {
+        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble() * zeroTemp);
+        //fromDegrees(gyro.getYaw().getValue());
     }
 
     public Pose2d getPose() {
@@ -64,15 +66,15 @@ public class PoseEstimatorSub extends SubsystemBase {
     }
 
     public void setPose(Pose2d pose) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, pose);
+        poseEstimator.resetPosition(getGyroYaw(1), swerveSub.getState().ModulePositions, pose);
     }
 
     public void setPoseTranslation(Pose2d pose) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(pose.getTranslation(), getPose().getRotation()));
+        poseEstimator.resetPosition(getGyroYaw(1), swerveSub.getState().ModulePositions, new Pose2d(pose.getTranslation(), getPose().getRotation()));
     }
 
     public void setPoseTranslation(Translation2d translation) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(translation, getPose().getRotation()));
+        poseEstimator.resetPosition(getGyroYaw(1), swerveSub.getState().ModulePositions, new Pose2d(translation, getPose().getRotation()));
     }
 
     public Rotation2d getHeading() {
@@ -101,15 +103,15 @@ public class PoseEstimatorSub extends SubsystemBase {
     }
 
     public void setHeading(Rotation2d heading) {
-        poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(getPose().getTranslation(), heading));
+        poseEstimator.resetPosition(getGyroYaw(1), swerveSub.getState().ModulePositions, new Pose2d(getPose().getTranslation(), heading));
     }
 
     public void zeroHeading() {
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent() == true && alliance.get() == DriverStation.Alliance.Red) {
-            poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI)));
+            poseEstimator.resetPosition(getGyroYaw(180), swerveSub.getState().ModulePositions, new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI)));
         } else {
-            poseEstimator.resetPosition(getGyroYaw(), swerveSub.getState().ModulePositions, new Pose2d(getPose().getTranslation(), new Rotation2d()));
+            poseEstimator.resetPosition(getGyroYaw(180), swerveSub.getState().ModulePositions, new Pose2d(getPose().getTranslation(), new Rotation2d()));
         }
     }
 
@@ -147,8 +149,8 @@ public class PoseEstimatorSub extends SubsystemBase {
   }
 
     public void update() {
-        poseEstimator.update(getGyroYaw(), swerveSub.getState().ModulePositions);
-
+        poseEstimator.update(getGyroYaw(1), swerveSub.getState().ModulePositions);
+        /* 
         boolean rejectUpdate = false;
         LimelightHelpers.SetRobotOrientation(Constants.VisionConstants.limelightName, 
             getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
@@ -160,7 +162,22 @@ public class PoseEstimatorSub extends SubsystemBase {
             poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(getVisionStdDevs(), getVisionStdDevs(), 9999999));
             poseEstimator.addVisionMeasurement(botPose.pose, botPose.timestampSeconds);
         }
-        
+        */
+        LimelightHelpers.PoseEstimate limelightBotpose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-left");
+        if(limelightBotpose.tagCount >= 1) {
+            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(getVisionStdDevs(), getVisionStdDevs(),9999999));
+            poseEstimator.addVisionMeasurement(
+                limelightBotpose.pose,
+                Timer.getFPGATimestamp() -
+                    (LimelightHelpers.getLatency_Pipeline("limelight-left") / 1000) -
+                    (LimelightHelpers.getLatency_Capture("limelight-left") / 1000)
+            );
+                //limelightBotpose.timestampSeconds);
+        }
+
+
+
+
         field.setRobotPose(getPose());
     }
 

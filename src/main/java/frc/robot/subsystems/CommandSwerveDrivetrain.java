@@ -141,6 +141,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         this.poseEstimatorSub = poseEstimatorSub;
 
+        poseEstimatorSub.initialize(this);
+
         configureAutoBuilder();
     }
 

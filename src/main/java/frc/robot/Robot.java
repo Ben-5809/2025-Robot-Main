@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     for (int port = 5800; port <= 5809; port++) {
-      PortForwarder.add(port, "limelight-coral.local", port);
+      PortForwarder.add(port, Constants.VisionConstants.limelightName, port);
     }
   }
 

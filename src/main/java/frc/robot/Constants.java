@@ -8,16 +8,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.*;
-import com.pathplanner.*;
-import com.pathplanner.lib.config.*;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -54,12 +46,12 @@ public final class Constants {
             elevatorConfig.Feedback.SensorToMechanismRatio = 1/6; 
 
             //Motion Magic® gains
-            elevatorConfig.Slot0.kG = 0.19;
+            elevatorConfig.Slot0.kG = 0.4;
             elevatorConfig.Slot0.kS = 0.23;
             elevatorConfig.Slot0.kP = 2.0;
             elevatorConfig.Slot0.kI = 0.0;
             elevatorConfig.Slot0.kD = 0.02;
-            elevatorConfig.Slot0.kV = 0.149;
+            elevatorConfig.Slot0.kV = 0.27;
             elevatorConfig.Slot0.kA = 0.002;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
            
@@ -88,7 +80,7 @@ public final class Constants {
         //Dis tances 
         public static final double L1 = 10;
         public static final double L2 = 17.2;
-        public static final double L3 = 30.3;
+        public static final double L3 = 30.35;
         public static final double L4 = 52.55;
         public static final double home = -0.05;
     }
@@ -173,8 +165,14 @@ public final class Constants {
         );
 
         //Tag ID 20
+        //public static final Pose2d blueReefStartPose = new Pose2d(
+          //  new Translation2d(5.125, 5.125),
+            //new Rotation2d()
+        //);
+
+        //Tag ID 18
         public static final Pose2d blueReefStartPose = new Pose2d(
-            new Translation2d(5.125, 5.125),
+            new Translation2d(3.200, 4.05),
             new Rotation2d()
         );
     }
