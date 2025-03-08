@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Straight to Right"
+            "pathName": "Process to L3"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right L4T1 to Source"
+            "pathName": "L3 to source"
           }
         },
         {
@@ -44,13 +44,38 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Source to L4T2 "
+            "pathName": "source to right L4T2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L4T2 to Source"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.6
+                }
+              }
+            ]
           }
         }
       ]

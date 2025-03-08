@@ -55,20 +55,23 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Get Off Line Blue");
-        SmartDashboard.putData("Auto Mode", autoChooser);
-
-
-        NamedCommands.registerCommand("Test", new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedBlue, 1.5));
+        NamedCommands.registerCommand("L1", new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedBlue, -4));
         NamedCommands.registerCommand("L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 8))
-            .andThen(new WaitCommand(0.15))
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
+            .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         NamedCommands.registerCommand("L3", new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
-            .andThen(new WaitCommand(0.175))
+            .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
+        NamedCommands.registerCommand("Intake", new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
 
+        
+        autoChooser = AutoBuilder.buildAutoChooser("Process Wall");
+        SmartDashboard.putData("Auto Mode", autoChooser);
+
+
+       
         configureBindings();
     }
 
@@ -83,8 +86,6 @@ public class RobotContainer {
                     .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
-
-        
 
 
         // Run SysId routines when holding back/start and X/Y.
@@ -108,9 +109,12 @@ public class RobotContainer {
         operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
         operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
 
-   //Trickshot
+        //Trickshot
         operatorController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkGreen, -19.8).andThen(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedPink, -2)));
+        operatorController.b().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -4));
+        operatorController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25));
 
+        //driverController.y().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -4));
         driverController.a().onTrue(new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
         driverController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 0));
         driverController.x().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -1.5));
@@ -119,19 +123,19 @@ public class RobotContainer {
          
         driverController.leftTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L1)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
-            .andThen(new WaitCommand(0.175))
+            .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         driverController.rightTrigger(.8).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L2)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
-            .andThen(new WaitCommand(0.175))
+            .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         driverController.leftBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
-            .andThen(new WaitCommand(0.175))
+            .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         driverController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 8))
-            .andThen(new WaitCommand(0.15))
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
+            .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
         
@@ -141,7 +145,6 @@ public class RobotContainer {
         //operatorController.leftTrigger(0.9).(isManual == true);
 
         if (isManual) {
-
         }
         else {
 

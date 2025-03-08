@@ -51,7 +51,7 @@ public final class Constants {
             elevatorConfig.Slot0.kP = 2.0;
             elevatorConfig.Slot0.kI = 0.0;
             elevatorConfig.Slot0.kD = 0.02;
-            elevatorConfig.Slot0.kV = 0.28;
+            elevatorConfig.Slot0.kV = 0.265;
             elevatorConfig.Slot0.kA = 0.002;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
            

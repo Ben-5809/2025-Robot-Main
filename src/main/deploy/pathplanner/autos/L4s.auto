@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Straight to Right"
+            "pathName": "Start Straight to Left"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "L3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right L4T1 to Source"
+            "pathName": "Left to Source"
           }
         },
         {
@@ -44,13 +44,38 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Source to L4T2 "
+            "pathName": "Source to L4T2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "L3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L4T2 to Source"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              }
+            ]
           }
         }
       ]

@@ -23,7 +23,6 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-
     gyro.setYaw(180);
 
     for (int port = 5800; port <= 5809; port++) {
@@ -51,6 +50,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {

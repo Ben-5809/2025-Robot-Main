@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Straight to Left"
+            "pathName": "Start to L4 1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "L4 1 to side"
           }
         }
       ]
