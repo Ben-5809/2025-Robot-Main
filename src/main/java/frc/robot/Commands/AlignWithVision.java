@@ -1,7 +1,8 @@
 package frc.robot.Commands;
-/*
+
 import java.util.Optional;
 
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -16,7 +17,6 @@ import frc.robot.subsystems.VisionSubsystem;
 public class AlignWithVision extends Command {
   private CommandSwerveDrivetrain subDrivetrain;
   private VisionSubsystem poseEstimator;
-
 
   PoseEstimate estimatedPose;
   double drivetrainRotation = 0;
@@ -37,10 +37,10 @@ public class AlignWithVision extends Command {
   public void execute() {
     // Tells the limelight where we are on the field
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[0],
-        subDrivetrain.getState().Pose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        subDrivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[1],
-        subDrivetrain.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    AngularVelocity gyroRate = Units.DegreesPerSecond.of(subDrivetrain.getGyroRate());
+        subDrivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
+    AngularVelocity gyroRate = subDrivetrain.getPigeon2().getAngularVelocityZWorld().getValue();
 
     Optional<PoseEstimate> estimatedPose = poseEstimator.determinePoseEstimate(gyroRate);
     if (estimatedPose.isPresent()) {
@@ -63,4 +63,4 @@ public class AlignWithVision extends Command {
   }
 }
 
- */
+ 
