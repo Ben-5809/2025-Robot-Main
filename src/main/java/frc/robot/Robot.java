@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     gyro.setYaw(180);
 
     for (int port = 5800; port <= 5809; port++) {
-      PortForwarder.add(port, Constants.VisionConstants.limelightName, port);
+      PortForwarder.add(port, Constants.VisionConstants.LIMELIGHT_NAMES[1], port);
     }
   }
 

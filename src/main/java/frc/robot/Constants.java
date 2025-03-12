@@ -10,11 +10,15 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
+
+import edu.wpi.first.units.Units;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 
 import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -135,65 +139,47 @@ public final class Constants {
         public static final double L4Voltage = 4.0;
     }
 
-    public static class poseEstimatorCons {
-        public static final String leftCamera = "limelight-left";
-        public static final String rightCamera = "limelight-right";
-
-        public static final double autoVisionStdDevs = 10;
-        public static final double teleopVisionStdDevs = 0.01;
-        public static final double aimVisionStdDevs = 0.01;
-    }
-
     public static class VisionConstants {
-        public static final String limelightName = "limelight-left";
+        public static final String[] LIMELIGHT_NAMES = new String[] { "limelight-right", "limelight-left" };
 
-        
-        public static final double MOVE_P = 0.300000;
-        public static final double MOVE_I = 0.000000;
-        public static final double MOVE_D = 0.000600;
+    /**
+     * <p>
+     * Pose estimator standard deviation for vision data
+     * <p>
+     * <b>Units:</b> Meters
+     */
+    public static final double MEGA_TAG2_STD_DEVS_POSITION = 0.7;
 
-        public static final double ROTATE_P = 0.030000;
-        public static final double ROTATE_I = 0.000000;
-        public static final double ROTATE_D = 0.000100;
+    /**
+     * <p>
+     * Pose estimator standard deviation for vision data
+     * </p>
+     * <b>Units:</b> Radians
+     */
+    public static final double MEGA_TAG2_STD_DEVS_HEADING = 9999999;
 
-        public static final double TOLERANCE = 0.01;
+    /**
+     * <p>
+     * Pose estimator standard deviation for vision data
+     * </p>
+     * <b>Units:</b> Meters
+     */
+    public static final double MEGA_TAG1_STD_DEVS_POSITION = .3;
 
-        //Tag ID 11
-        public static final Pose2d redReefStartPose = new Pose2d(
-            new Translation2d(12.425, 2.925),
-            new Rotation2d()
-        );
+    public static final double MEGA_TAG1_STD_DEVS_HEADING = .1;
+    /**
+     * <p>
+     * Maximum rate of rotation before we begin rejecting pose updates
+     * </p>
+     */
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = Units.DegreesPerSecond.of(720);
 
-        //Tag ID 20
-        //public static final Pose2d blueReefStartPose = new Pose2d(
-          //  new Translation2d(5.125, 5.125),
-            //new Rotation2d()
-        //);
+    /**
+     * The area that one tag (if its the only tag in the update) needs to exceed
+     * before being accepted
+     */
+    public static final double AREA_THRESHOLD = 0.1;
 
-        //Tag ID 18
-        public static final Pose2d blueReefStartPose = new Pose2d(
-            new Translation2d(3.200, 4.05),
-            new Rotation2d()
-        );
     }
 
-    public static final class PathPlanner {
-        
-    }
-
-
-    public static final class Swerve {
-
-        /* Drivetrain Constants */
-        public static final double trackWidth = Units.inchesToMeters(22.75); //TODO: This must be tuned to specific robot
-        public static final double wheelBase = Units.inchesToMeters(22.75); //TODO: This must be tuned to specific robot
-
-        /* Swerve Kinematics 
-         * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
-    }
 }
