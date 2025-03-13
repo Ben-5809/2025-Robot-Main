@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -17,20 +18,28 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+
+import frc.robot.Constants.constField;;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -333,4 +342,79 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     ) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
+
+    /**
+   * Returns the closest reef branch to the robot.
+   * 
+   * @param leftBranchRequested If we are requesting to align to the left or right
+   *                            branch
+   * @return The desired reef branch face to align to
+   */
+  public Pose2d getDesiredReef(boolean leftBranchRequested) {
+    // Get the closest reef branch face using either branch on the face
+    List<Pose2d> reefPoses = constField.getReefPositions().get();
+    Pose2d currentPose = getState().Pose;
+    Pose2d desiredReef = currentPose.nearest(reefPoses);
+    int closestReefIndex = reefPoses.indexOf(desiredReef);
+
+    // Invert faces on the back of the reef so they're always relative to the driver
+    if (closestReefIndex > 3 && closestReefIndex < 10) {
+      leftBranchRequested = !leftBranchRequested;
+    }
+
+    // If we were closer to the left branch but selected the right branch (or
+    // vice-versa), switch to our desired branch
+    if (leftBranchRequested && (closestReefIndex % 2 == 1)) {
+      desiredReef = reefPoses.get(closestReefIndex - 1);
+    } else if (!leftBranchRequested && (closestReefIndex % 2 == 0)) {
+      desiredReef = reefPoses.get(closestReefIndex + 1);
+    }
+    return desiredReef;
+  }
+
+  /**
+   * Contains logic for automatically aligning & automatically driving to the
+   * reef.
+   * May align only rotationally, automatically drive to a branch, or be
+   * overridden by the driver
+   */
+  /* 
+  public void autoAlign(Distance distanceFromTarget, Pose2d desiredTarget,
+      LinearVelocity xVelocity,
+      LinearVelocity yVelocity,
+      AngularVelocity rVelocity, double elevatorMultiplier, boolean isOpenLoop, Distance maxAutoDriveDistance) {
+    desiredAlignmentPose = desiredTarget;
+    int redAllianceMultiplier = constField.isRedAlliance() ? -1 : 1;
+
+    if (distanceFromTarget.gte(maxAutoDriveDistance)) {
+      // Rotational-only auto-align
+      drive(
+          new Translation2d(xVelocity.times(redAllianceMultiplier).in(Units.MetersPerSecond),
+              yVelocity.times(redAllianceMultiplier).in(Units.MetersPerSecond)),
+          getVelocityToRotate(desiredTarget.getRotation()).in(Units.RadiansPerSecond), isOpenLoop);
+    } else {
+      // Full auto-align
+      ChassisSpeeds desiredChassisSpeeds = getAlignmentSpeeds(desiredTarget);
+
+      // Speed limit based on elevator height
+      LinearVelocity linearSpeedLimit = constDrivetrain.OBSERVED_DRIVE_SPEED.times(elevatorMultiplier);
+      AngularVelocity angularSpeedLimit = constDrivetrain.TURN_SPEED.times(elevatorMultiplier);
+
+      if (!RobotState.isAutonomous()) {
+        if ((desiredChassisSpeeds.vxMetersPerSecond > linearSpeedLimit.in(Units.MetersPerSecond))
+            || (desiredChassisSpeeds.vyMetersPerSecond > linearSpeedLimit.in(Units.MetersPerSecond))
+            || (desiredChassisSpeeds.omegaRadiansPerSecond > angularSpeedLimit.in(Units.RadiansPerSecond))) {
+
+          desiredChassisSpeeds.vxMetersPerSecond = MathUtil.clamp(desiredChassisSpeeds.vxMetersPerSecond, 0,
+              linearSpeedLimit.in(MetersPerSecond));
+          desiredChassisSpeeds.vyMetersPerSecond = MathUtil.clamp(desiredChassisSpeeds.vyMetersPerSecond, 0,
+              linearSpeedLimit.in(MetersPerSecond));
+          desiredChassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(desiredChassisSpeeds.omegaRadiansPerSecond, 0,
+              angularSpeedLimit.in(RadiansPerSecond));
+        }
+      }
+
+      drive(desiredChassisSpeeds, isOpenLoop);
+    }
+  }*/
 }

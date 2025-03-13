@@ -25,13 +25,18 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     gyro.setYaw(180);
 
+    m_robotContainer.setMegaTag2(false);
+    /* 
     for (int port = 5800; port <= 5809; port++) {
       PortForwarder.add(port, Constants.VisionConstants.LIMELIGHT_NAMES[1], port);
     }
+    */
   }
 
   @Override
   public void robotPeriodic() {
+    m_robotContainer.UpdateVision().schedule();
+
     CommandScheduler.getInstance().run(); 
   }
 
@@ -51,6 +56,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
+    m_robotContainer.setMegaTag2(true);
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -66,6 +73,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.setMegaTag2(true);
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

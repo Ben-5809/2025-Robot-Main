@@ -14,14 +14,14 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
 
-public class AlignWithVision extends Command {
+public class UpdateVision extends Command {
   private CommandSwerveDrivetrain subDrivetrain;
   private VisionSubsystem poseEstimator;
 
   PoseEstimate estimatedPose;
   double drivetrainRotation = 0;
   
-  public AlignWithVision(CommandSwerveDrivetrain drivetrain, VisionSubsystem poseEstimator) {
+  public UpdateVision(CommandSwerveDrivetrain drivetrain, VisionSubsystem poseEstimator) {
     this.subDrivetrain = drivetrain;
     this.poseEstimator = poseEstimator;
     

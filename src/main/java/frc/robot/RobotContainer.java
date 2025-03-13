@@ -13,6 +13,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,11 +23,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.*;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
+import frc.robot.subsystems.VisionSubsystem;
 
 
 public class RobotContainer {
@@ -50,6 +53,7 @@ public class RobotContainer {
     private final ElevatorSub elevatorSub = new ElevatorSub();
     private final LEDsub ledSub = new LEDsub();
     private final CoralEndEffector coralEndEffector = new CoralEndEffector();
+    private final VisionSubsystem visionSubsystem = new VisionSubsystem();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -97,11 +101,11 @@ public class RobotContainer {
         operatorController.start().and(operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         */
 
-        // reset the field-centric heading on left bumper press
-        operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
         
 
-
+        // reset the field-centric heading on left bumper press
+        operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -155,4 +159,26 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
+
+    public Command UpdateVision () {
+        return new UpdateVision(drivetrain, visionSubsystem)
+            .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming).ignoringDisable(true);
+    }
+
+    public void setMegaTag2(boolean setMegaTag2) {
+
+        if (setMegaTag2) {
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(
+            VisionConstants.MEGA_TAG2_STD_DEVS_POSITION,
+            VisionConstants.MEGA_TAG2_STD_DEVS_POSITION,
+            VisionConstants.MEGA_TAG2_STD_DEVS_HEADING));
+        } else {
+        // Use MegaTag 1
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(
+            VisionConstants.MEGA_TAG1_STD_DEVS_POSITION,
+            VisionConstants.MEGA_TAG1_STD_DEVS_POSITION,
+            VisionConstants.MEGA_TAG1_STD_DEVS_HEADING));
+        }
+        visionSubsystem.setMegaTag2(setMegaTag2);
+  }
 }
