@@ -7,7 +7,10 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -20,12 +23,16 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -34,11 +41,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
-
+import frc.robot.Constants;
 import frc.robot.Constants.constField;;
 
 /**
@@ -49,7 +57,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    
+    private double timeFromLastUpdate;
+    private double lastSimTime;
 
+    private SwerveModuleState lastDesiredSwerveModuleState;
+
+    private SwerveModuleState[] lastDesiredStates = new SwerveModuleState[]{new SwerveModuleState(),
+        new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
+
+    private PositionVoltage steerMotorController = new PositionVoltage(0);
+
+    private DutyCycleOut driveMotorControllerOpen;
 
     /** Swerve request to apply during robot-centric path following */
     private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
@@ -292,6 +311,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        timeFromLastUpdate = Timer.getFPGATimestamp() - lastSimTime;
+		lastSimTime = Timer.getFPGATimestamp();
     }
 
     private void startSimThread() {
@@ -344,13 +366,139 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     /**
+	 * Minimize the change in heading the desired swerve module state would require
+	 * by potentially reversing the direction the wheel spins. Customized from
+	 * WPILib's version to include placing in appropriate scope for CTRE onboard
+	 * control.
+	 *
+	 * @param desiredState
+	 *            The desired state.
+	 * @param currentAngle
+	 *            The current module angle.
+	 */
+	private SwerveModuleState optimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
+		double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
+		double targetSpeed = desiredState.speedMetersPerSecond;
+		double delta = targetAngle - currentAngle.getDegrees();
+		if (Math.abs(delta) > 90) {
+			targetSpeed = -targetSpeed;
+			targetAngle = delta > 90 ? (targetAngle -= 180) : (targetAngle += 180);
+		}
+		return new SwerveModuleState(targetSpeed, Rotation2d.fromDegrees(targetAngle));
+	}
+
+    /**
+	 * Takes the current angle and the target angle and outputs a new target angle
+	 * that is within +/- 180 degrees of the current angle.
+	 *
+	 * The difference of the current angle of the module and the desired angle could
+	 * be greater than 360 degrees, and thats a problem, and this function solves
+	 * it.
+	 *
+	 * Note that this is simply helping the optimize function. This function only
+	 * gets the angle within +/- 180 degrees, NOT +/- 90 degrees which is what the
+	 * optimize function does.
+	 *
+	 *
+	 * @param scopeReference
+	 *            Current Angle in Degrees
+	 * @param newAngle
+	 *            Target Angle in Degrees
+	 * @return Closest angle within scope in Degrees
+	 */
+	private double placeInAppropriate0To360Scope(double scopeReference, double newAngle) {
+		double lowerBound;
+		double upperBound;
+		double lowerOffset = scopeReference % 360;
+		if (lowerOffset >= 0) {
+			lowerBound = scopeReference - lowerOffset;
+			upperBound = scopeReference + (360 - lowerOffset);
+		} else {
+			upperBound = scopeReference - lowerOffset;
+			lowerBound = scopeReference - (360 + lowerOffset);
+		}
+		while (newAngle < lowerBound) {
+			newAngle += 360;
+		}
+		while (newAngle > upperBound) {
+			newAngle -= 360;
+		}
+		if (newAngle - scopeReference > 180) {
+			newAngle -= 360;
+		} else if (newAngle - scopeReference < -180) {
+			newAngle += 360;
+		}
+		return newAngle;
+	}
+
+    private void setModuleState(SwerveModuleState desiredState, CommandSwerveDrivetrain drivetrain, boolean steerInPlace, int mod) {
+		// Optimize explanation: https://youtu.be/0Xi9yb1IMyA?t=226
+		SwerveModuleState state = drivetrain.optimize(desiredState, drivetrain.getModule(mod).getCurrentState().angle);
+		lastDesiredSwerveModuleState = state;
+		// -*- Setting the Drive Motor -*-
+
+
+        // The output is from -1 to 1. Essentially a percentage
+        // So, the requested speed divided by it's max speed.
+        driveMotorControllerOpen.Output = (state.speedMetersPerSecond / 4.7);
+        drivetrain.getModule(mod).getDriveMotor().setControl(driveMotorControllerOpen);
+
+		// -*- Setting the Steer Motor -*-
+
+		double rotation = state.angle.getRotations();
+
+		// If the requested speed is lower than a relevant steering speed,
+		// don't turn the motor. Set it to whatever it's previous angle was.
+		if (Math.abs(state.speedMetersPerSecond) < (0.01 * 4.7) && !steerInPlace) {
+			return;
+		}
+
+		steerMotorController.Position = rotation;
+		drivetrain.getModule(mod).getSteerMotor().setControl(steerMotorController);
+	}
+
+    public void setModuleStates(SwerveModuleState[] desiredModuleStates, CommandSwerveDrivetrain drivetrain) {
+		// Lowers the speeds if needed so that they are actually achievable. This has to
+		// be done here because speeds must be lowered relative to the other speeds as
+		// well
+		SwerveDriveKinematics.desaturateWheelSpeeds(desiredModuleStates,4.7);
+		lastDesiredStates = desiredModuleStates;
+
+        int modNum = 0;
+
+        SwerveModule[] modules;
+
+        while (modNum != 3) {
+            modules[modNum] = drivetrain.getModule(modNum);
+            modNum += 1;
+        }
+
+        modNum = 0;
+		for (SwerveModule mod : modules) {
+			setModuleState(desiredModuleStates[modNum], drivetrain, false, modNum);
+            modNum += 1;
+		}
+	}
+
+    private void driveWithKinematics (ChassisSpeeds chassisSpeeds, CommandSwerveDrivetrain drivetrain) {
+        SwerveDriveKinematics kinematics = drivetrain.getKinematics();
+        SwerveModuleState[] desiredModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds.discretize(chassisSpeeds, timeFromLastUpdate));
+        
+    }
+
+
+    private Pose2d getPose (CommandSwerveDrivetrain drivetrain) {
+        return drivetrain.getPose(drivetrain);
+    }
+
+    /**
    * Returns the closest reef branch to the robot.
    * 
    * @param leftBranchRequested If we are requesting to align to the left or right
    *                            branch
    * @return The desired reef branch face to align to
    */
-  public Pose2d getDesiredReef(boolean leftBranchRequested) {
+    public Pose2d getDesiredReef(boolean leftBranchRequested) {
     // Get the closest reef branch face using either branch on the face
     List<Pose2d> reefPoses = constField.getReefPositions().get();
     Pose2d currentPose = getState().Pose;
@@ -373,48 +521,60 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   }
 
   /**
+   * Calculate the ChassisSpeeds needed to align the robot to the desired pose.
+   * This must be called every loop until you reach the desired pose.
+   * 
+   * @param desiredPose The desired pose to align to
+   * @return The ChassisSpeeds needed to align the robot to the desired pose
+   */
+  public ChassisSpeeds getAlignmentSpeeds(Pose2d desiredPose, CommandSwerveDrivetrain subDrivetrain) {
+    Pose2d desiredAlignmentPose = desiredPose;
+    // TODO: This might run better if instead of 0, we use
+    // constDrivetrain.TELEOP_AUTO_ALIGN.DESIRED_AUTO_ALIGN_SPEED.in(Units.MetersPerSecond);.
+    // I dont know why. it might though
+    return Constants.TELEOP_AUTO_ALIGN.TELEOP_AUTO_ALIGN_CONTROLLER.calculate(getPose(subDrivetrain), desiredPose, 0,
+        desiredPose.getRotation());
+  }
+
+  /**
    * Contains logic for automatically aligning & automatically driving to the
    * reef.
    * May align only rotationally, automatically drive to a branch, or be
    * overridden by the driver
    */
-  /* 
+  
   public void autoAlign(Distance distanceFromTarget, Pose2d desiredTarget,
       LinearVelocity xVelocity,
       LinearVelocity yVelocity,
-      AngularVelocity rVelocity, double elevatorMultiplier, boolean isOpenLoop, Distance maxAutoDriveDistance) {
-    desiredAlignmentPose = desiredTarget;
+      AngularVelocity rVelocity, 
+      CommandSwerveDrivetrain drivetrain) {
+    Pose2d desiredAlignmentPose = desiredTarget;
     int redAllianceMultiplier = constField.isRedAlliance() ? -1 : 1;
 
-    if (distanceFromTarget.gte(maxAutoDriveDistance)) {
-      // Rotational-only auto-align
-      drive(
-          new Translation2d(xVelocity.times(redAllianceMultiplier).in(Units.MetersPerSecond),
-              yVelocity.times(redAllianceMultiplier).in(Units.MetersPerSecond)),
-          getVelocityToRotate(desiredTarget.getRotation()).in(Units.RadiansPerSecond), isOpenLoop);
-    } else {
-      // Full auto-align
-      ChassisSpeeds desiredChassisSpeeds = getAlignmentSpeeds(desiredTarget);
+    
+    // Full auto-align
+    ChassisSpeeds desiredChassisSpeeds = getAlignmentSpeeds(desiredTarget, drivetrain);
 
-      // Speed limit based on elevator height
-      LinearVelocity linearSpeedLimit = constDrivetrain.OBSERVED_DRIVE_SPEED.times(elevatorMultiplier);
-      AngularVelocity angularSpeedLimit = constDrivetrain.TURN_SPEED.times(elevatorMultiplier);
+    // Speed limit based on elevator height
+    LinearVelocity linearSpeedLimit = Units.MetersPerSecond.of(4.5);
+    AngularVelocity angularSpeedLimit = Units.DegreesPerSecond.of(360);
 
-      if (!RobotState.isAutonomous()) {
+    if (!RobotState.isAutonomous()) {
         if ((desiredChassisSpeeds.vxMetersPerSecond > linearSpeedLimit.in(Units.MetersPerSecond))
             || (desiredChassisSpeeds.vyMetersPerSecond > linearSpeedLimit.in(Units.MetersPerSecond))
             || (desiredChassisSpeeds.omegaRadiansPerSecond > angularSpeedLimit.in(Units.RadiansPerSecond))) {
 
-          desiredChassisSpeeds.vxMetersPerSecond = MathUtil.clamp(desiredChassisSpeeds.vxMetersPerSecond, 0,
-              linearSpeedLimit.in(MetersPerSecond));
-          desiredChassisSpeeds.vyMetersPerSecond = MathUtil.clamp(desiredChassisSpeeds.vyMetersPerSecond, 0,
-              linearSpeedLimit.in(MetersPerSecond));
-          desiredChassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(desiredChassisSpeeds.omegaRadiansPerSecond, 0,
-              angularSpeedLimit.in(RadiansPerSecond));
-        }
-      }
-
-      drive(desiredChassisSpeeds, isOpenLoop);
+        desiredChassisSpeeds.vxMetersPerSecond = MathUtil.clamp(desiredChassisSpeeds.vxMetersPerSecond, 0,
+            linearSpeedLimit.in(MetersPerSecond));
+        desiredChassisSpeeds.vyMetersPerSecond = MathUtil.clamp(desiredChassisSpeeds.vyMetersPerSecond, 0,
+            linearSpeedLimit.in(MetersPerSecond));
+        desiredChassisSpeeds.omegaRadiansPerSecond = MathUtil.clamp(desiredChassisSpeeds.omegaRadiansPerSecond, 0,
+            angularSpeedLimit.in(RadiansPerSecond));
+        
     }
-  }*/
+
+    drive(desiredChassisSpeeds);
+    }
+  }
 }
+
