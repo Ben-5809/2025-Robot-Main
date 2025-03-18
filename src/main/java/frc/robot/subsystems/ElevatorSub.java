@@ -55,7 +55,9 @@ public class ElevatorSub extends SubsystemBase {
     leftElevatorMaster.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig);
   }
 
-  //Returns the distance of each motor in inches. If they are basically the same, all is good in da hood
+  /**
+   * Returns the distance of each motor in rotations. If they are basically the same, all is good in da hood
+  */
   public double getElevatorPosRight () {
     return rightElevatorFollower.getPosition().getValueAsDouble();
   }

@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Angle;
@@ -104,6 +105,8 @@ public final class Constants {
         public static final double L3 = 30.35;
         public static final double L4 = 52.55;
         public static final double home = -0.05;
+
+        public static final ChassisSpeeds test = new ChassisSpeeds(1,1,1);
     }
 
     public static class CANdleCons {

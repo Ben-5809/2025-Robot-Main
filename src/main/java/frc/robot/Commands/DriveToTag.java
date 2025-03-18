@@ -6,6 +6,8 @@ package frc.robot.Commands;
 
 
 import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,23 +23,21 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class DriveToTag extends Command {
+  private final VisionSubsystem vision;
+  private final CommandSwerveDrivetrain drivetrain;
 
-  public DriveToTag() {
+  public DriveToTag(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain) {
+    this.vision = vision;
+    this.drivetrain = drivetrain;
 
+    addRequirements(drivetrain);
   }
 
-  //Overload for specific april tag by id
-
-  //maybe set tagid by closest here instead of each execution to keep same tag
   @Override
   public void initialize() {}
 
   @Override
-  public void execute() {
-
-    
-    }
-  
+  public void execute() {}
 
   @Override
   public boolean isFinished() {

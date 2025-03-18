@@ -11,6 +11,8 @@ import java.util.Optional;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.AngularVelocity;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -151,4 +153,20 @@ public class VisionSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
   }
+
+  public static ChassisSpeeds calculateChassisSpeeds(Pose2d robotPose, Pose2d targetPose) {
+        Translation2d relativePosition = targetPose.getTranslation().minus(robotPose.getTranslation());      
+
+        double targetAngle = targetPose.getRotation().getRadians();
+        double currentAngle = robotPose.getRotation().getRadians();
+        
+        double velocityX = relativePosition.getX(); 
+        double velocityY = relativePosition.getY();
+        
+        double velocityRotation = (targetAngle - currentAngle); 
+        
+        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(velocityX, velocityY, velocityRotation);
+
+        return chassisSpeeds;
+    }
 }
