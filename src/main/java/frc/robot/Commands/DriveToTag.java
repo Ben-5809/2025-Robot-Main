@@ -4,40 +4,61 @@
 
 package frc.robot.Commands;
 
+import java.util.Optional;
 
-import static edu.wpi.first.units.Units.*;
-
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.libaries.LimelightHelpers.RawFiducial;
-import edu.wpi.first.math.controller.PIDController;
+import frc.robot.libaries.LimelightHelpers;
+import frc.robot.libaries.LimelightHelpers.PoseEstimate;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.AngularVelocity;
 
-import edu.wpi.first.wpilibj2.command.Command;
 
 public class DriveToTag extends Command {
   private final VisionSubsystem vision;
   private final CommandSwerveDrivetrain drivetrain;
+  private final boolean goLeft;
+  private final String limelight;
 
-  public DriveToTag(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain) {
+  private Pose2d targetPosition;
+  private SwerveRequest.ApplyRobotSpeeds visionRequest;
+  private ChassisSpeeds visionSpeeds;
+
+  public DriveToTag(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain, boolean goLeft, String LimelightName) {
     this.vision = vision;
     this.drivetrain = drivetrain;
+    this.goLeft = goLeft;
+    this.limelight = LimelightName;
 
     addRequirements(drivetrain);
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    targetPosition = vision.getTargetPos(limelight, goLeft);
+  }
 
   @Override
-  public void execute() {}
+  public void execute() {
+    // Tells the limelight where we are on the field
+    LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[0],
+        drivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
+    LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[1],
+        drivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
+    AngularVelocity gyroRate = drivetrain.getPigeon2().getAngularVelocityZWorld().getValue();
+
+    Optional<PoseEstimate> estimatedPose = vision.determinePoseEstimate(gyroRate);
+    if (estimatedPose.isPresent()) {
+      drivetrain.addVisionMeasurement(estimatedPose.get().pose, estimatedPose.get().timestampSeconds);
+    }
+
+    visionSpeeds = vision.calculateChassisSpeeds(targetPosition, drivetrain.getState().Pose);
+    drivetrain.setControl(visionRequest.withSpeeds(visionSpeeds));
+  }
 
   @Override
   public boolean isFinished() {
@@ -46,6 +67,7 @@ public class DriveToTag extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    
+    drivetrain.setControl(null);
   }
 }
+

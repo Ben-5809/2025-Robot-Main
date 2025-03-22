@@ -11,11 +11,13 @@ import java.util.Optional;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.AngularVelocity;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 
 @Logged
@@ -34,7 +36,12 @@ public class VisionSubsystem extends SubsystemBase {
 
   private boolean useMegaTag2 = false;
 
+  private Optional<Alliance> ALLIANCE = Optional.empty();
+
+  int[] validIDs = {1-22};
+  
   public VisionSubsystem() {
+    LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[0], validIDs);
   }
 
   public PoseEstimate[] getLastPoseEstimates() {
@@ -154,19 +161,146 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
   }
 
-  public static ChassisSpeeds calculateChassisSpeeds(Pose2d robotPose, Pose2d targetPose) {
-        Translation2d relativePosition = targetPose.getTranslation().minus(robotPose.getTranslation());      
+  /**
+   *  Calculates a ChassisSpeeds object for application to the drivetrain.
+   * 
+   *  @param targetPose a set point on the field that the robot is going to 
+   *  @param robotPose determined by vision
+   * 
+   *  @return ChassisSpeeds for swerve drivetrain. 
+   */
+  public ChassisSpeeds calculateChassisSpeeds(Pose2d targetPose, Pose2d robotPose) {    
+    //Adjustable factors for the speedcomponenets
+    double speedFactor = 1;
+    double rotationFactor = 1;
 
-        double targetAngle = targetPose.getRotation().getRadians();
-        double currentAngle = robotPose.getRotation().getRadians();
-        
-        double velocityX = relativePosition.getX(); 
-        double velocityY = relativePosition.getY();
-        
-        double velocityRotation = (targetAngle - currentAngle); 
-        
-        ChassisSpeeds chassisSpeeds = new ChassisSpeeds(velocityX, velocityY, velocityRotation);
+    //Gets the robot's current position and orientation
+    Translation2d robotPosition = robotPose.getTranslation();
+    Rotation2d robotRotation = robotPose.getRotation();
+    
+    //Gets the target's position
+    Translation2d targetPosition = targetPose.getTranslation();
 
-        return chassisSpeeds;
+    //Calculates the difference in position (relative to the robot)
+    Translation2d deltaPosition = targetPosition.minus(robotPosition);
+
+    //Calculates the angle to the target
+    double targetAngle = Math.atan2(deltaPosition.getY(), deltaPosition.getX());
+    
+    //Calculates the robot's angular difference to the target angle
+    double deltaAngle = targetAngle - robotRotation.getRadians();
+    
+    //Normalizes the angle difference to between -π and π
+    deltaAngle = Math.atan2(Math.sin(deltaAngle), Math.cos(deltaAngle));
+
+    //Calculates the x velocity
+    double vx = deltaPosition.getX() * speedFactor;
+    if (vx < 0.02) {
+      vx = 0; //If the motor is stalling set it zero 
     }
+
+    //Calculates the y velocity
+    double vy = deltaPosition.getY() * speedFactor;
+    if (vx < 0.02) {
+      vx = 0; //If the motor is stalling set it zero 
+    }
+
+    //Angular speed is proportional to the angular difference
+    double angularSpeed = deltaAngle * rotationFactor;
+    if (angularSpeed < 0.02) {
+      angularSpeed = 0; //If the motor is stalling set it zero 
+    }
+
+    // Create and return the ChassisSpeeds object (vx, vy, omega)
+    return new ChassisSpeeds(vx, vy, angularSpeed);
+  }
+
+  public double getTagID (String LimelightName) {
+    return LimelightHelpers.getFiducialID(LimelightName);
+  }
+
+  /**
+   *  Logic to figure out what position to target.
+   *  It has three inputs: the alliance, which tag is seen, and if it is targeting the left or right reef
+   * 
+   *  @param LimelightName is the name of the limelight used to lineup
+   *  @param isLeft {@code true} if lining up left, {@code false} for right
+   *  
+   *  @return Pose2d of target
+   */
+  public Pose2d getTargetPos (String LimelightName, boolean isLeft) {
+    if (ALLIANCE.isPresent() && ALLIANCE.get() == Alliance.Blue) {
+      if (isLeft) {
+        if (getTagID(LimelightName) == 18) {
+          return Constants.constField.POSES.REEF_A;
+        } if (getTagID(LimelightName) == 17) {
+          return Constants.constField.POSES.REEF_C;
+        } if (getTagID(LimelightName) == 22) {
+          return Constants.constField.POSES.REEF_E;
+        } if (getTagID(LimelightName) == 21) {
+          return Constants.constField.POSES.REEF_G;
+        } if (getTagID(LimelightName) == 20) {
+          return Constants.constField.POSES.REEF_I;
+        } if (getTagID(LimelightName) == 19) {
+          return Constants.constField.POSES.REEF_K;
+        } else  {
+          System.out.println("No Tag Detected. No Target Pose Returned");
+          return null;
+        }
+      } else {
+        if (getTagID(LimelightName) == 18) {
+          return Constants.constField.POSES.REEF_B;
+        } if (getTagID(LimelightName) == 17) {
+          return Constants.constField.POSES.REEF_D;
+        } if (getTagID(LimelightName) == 22) {
+          return Constants.constField.POSES.REEF_F;
+        } if (getTagID(LimelightName) == 21) {
+          return Constants.constField.POSES.REEF_H;
+        } if (getTagID(LimelightName) == 20) {
+          return Constants.constField.POSES.REEF_J;
+        } if (getTagID(LimelightName) == 19) {
+          return Constants.constField.POSES.REEF_L;
+        } else  {
+          System.out.println("No Tag Detected. No Target Pose Returned");
+          return null;
+        }
+      }
+    } else {
+      if (isLeft) {
+        if (getTagID(LimelightName) == 18) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_A);
+        } if (getTagID(LimelightName) == 17) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_C);
+        } if (getTagID(LimelightName) == 22) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_E);
+        } if (getTagID(LimelightName) == 21) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_G);
+        } if (getTagID(LimelightName) == 20) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_I);
+        } if (getTagID(LimelightName) == 19) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_K);
+        } else  {
+          System.out.println("No Tag Detected. No Target Pose Returned");
+          return null;
+        }
+      } else {
+        if (getTagID(LimelightName) == 18) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_B);
+        } if (getTagID(LimelightName) == 17) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_D);
+        } if (getTagID(LimelightName) == 22) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_F);
+        } if (getTagID(LimelightName) == 21) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_H);
+        } if (getTagID(LimelightName) == 20) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_J);
+        } if (getTagID(LimelightName) == 19) {
+          return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_L);
+        } else  {
+          System.out.println("No Tag Detected. No Target Pose Returned");
+          return null;
+        }
+      }
+    }
+  }
 }

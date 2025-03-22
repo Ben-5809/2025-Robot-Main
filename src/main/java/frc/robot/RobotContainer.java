@@ -9,19 +9,14 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.*;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
@@ -30,13 +25,12 @@ import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.Stripper;
 
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
-    private boolean isManual = true;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -54,6 +48,7 @@ public class RobotContainer {
     private final LEDsub ledSub = new LEDsub();
     private final CoralEndEffector coralEndEffector = new CoralEndEffector();
     private final VisionSubsystem visionSubsystem = new VisionSubsystem();
+    private final Stripper stripper = new Stripper();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -118,6 +113,9 @@ public class RobotContainer {
         operatorController.b().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
         operatorController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25));
 
+        operatorController.leftTrigger(.9).whileTrue(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage));
+        operatorController.rightTrigger(.9).whileTrue(new ScoreBarge(coralEndEffector, stripper, Constants.CoralEndEffectorCons.outtakeBall, Constants.StripperConstants.outtakeVoltage));
+
         //driverController.y().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -4));
         driverController.a().onTrue(new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
         driverController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 0));
@@ -143,16 +141,9 @@ public class RobotContainer {
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
         
-        //operatorController.rightTrigger(.8).whileTrue(new AlignCommand(drivetrain, visionSubsystem));
+        driverController.povRight().whileTrue(new DriveToTag(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1]));
+        driverController.povLeft().whileTrue(new DriveToTag(visionSubsystem, drivetrain, true, Constants.VisionConstants.LIMELIGHT_NAMES[0]));
 
-
-        //operatorController.leftTrigger(0.9).(isManual == true);
-
-        if (isManual) {
-        }
-        else {
-
-        }
 
     }
 

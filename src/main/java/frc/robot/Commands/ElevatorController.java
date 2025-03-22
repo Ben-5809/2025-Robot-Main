@@ -4,12 +4,10 @@
 
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
-import frc.robot.Commands.EndEffectorVoltage;
+
 
 public class ElevatorController extends Command {
   //Declarations of the elevator sub
