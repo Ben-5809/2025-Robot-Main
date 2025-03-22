@@ -8,12 +8,15 @@ import frc.robot.libaries.LimelightHelpers;
 import frc.robot.libaries.LimelightHelpers.PoseEstimate;
 import java.util.Optional;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,10 +41,15 @@ public class VisionSubsystem extends SubsystemBase {
 
   private Optional<Alliance> ALLIANCE = Optional.empty();
 
-  int[] validIDs = {1-22};
+  Pose2d desiredAlignmentPose = Pose2d.kZero;
+
+  SwerveRequest.ApplyRobotSpeeds visionRequest;
+
+  int[] validIDs = {6-11, 17-22};
   
   public VisionSubsystem() {
     LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[0], validIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[1], validIDs);
   }
 
   public PoseEstimate[] getLastPoseEstimates() {
@@ -302,5 +310,33 @@ public class VisionSubsystem extends SubsystemBase {
         }
       }
     }
+  }
+
+  public ChassisSpeeds getAlignmentSpeeds(Pose2d desiredPose, CommandSwerveDrivetrain drivetrain) {
+    desiredAlignmentPose = desiredPose;
+  
+    return Constants.TELEOP_AUTO_ALIGN.TELEOP_AUTO_ALIGN_CONTROLLER.calculate(drivetrain.getState().Pose, desiredPose, 0,
+        desiredPose.getRotation());
+  }
+
+  public void autoAlignChassisSpeeds(Pose2d desiredTarget, CommandSwerveDrivetrain drivetrain) {
+    desiredAlignmentPose = desiredTarget;
+
+    ChassisSpeeds desiredChassisSpeeds = getAlignmentSpeeds(desiredTarget, drivetrain);
+    
+    drivetrain.setControl(visionRequest.withSpeeds(desiredChassisSpeeds));
+  }
+
+  public boolean isAtRotation(Rotation2d desiredRotation, CommandSwerveDrivetrain drivetrain) {
+    return (drivetrain.getState().Pose.getRotation().getMeasure()
+        .compareTo(desiredRotation.getMeasure().minus(Constants.TELEOP_AUTO_ALIGN.AT_ROTATION_TOLERANCE)) > 0) &&
+        drivetrain.getState().Pose.getRotation().getMeasure()
+            .compareTo(desiredRotation.getMeasure().plus(Constants.TELEOP_AUTO_ALIGN.AT_ROTATION_TOLERANCE)) < 0;
+  }
+
+  public Boolean isAligned(CommandSwerveDrivetrain drivetrain) {
+    return (desiredAlignmentPose.getTranslation().getDistance(
+        drivetrain.getState().Pose.getTranslation()) <= Constants.TELEOP_AUTO_ALIGN.AUTO_ALIGNMENT_TOLERANCE.in(Units.Meters))
+        && isAtRotation(desiredAlignmentPose.getRotation(), drivetrain);
   }
 }

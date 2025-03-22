@@ -12,17 +12,27 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 
 import edu.wpi.first.units.Units;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.generated.TunerConstants;
 
 import com.ctre.phoenix.led.CANdleConfiguration;
+
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.List;
 import java.util.Optional;
@@ -362,4 +372,41 @@ public final class Constants {
     }
 
   }
+
+  public static class TELEOP_AUTO_ALIGN {
+    public static final LinearVelocity DESIRED_AUTO_ALIGN_SPEED = Units.MetersPerSecond
+        .of(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) / 4);
+
+    public static final Distance MAX_AUTO_DRIVE_CORAL_STATION_DISTANCE = Units.Meters.of(10);
+    public static final Distance MAX_AUTO_DRIVE_REEF_DISTANCE = Units.Meters.of(1);
+    public static final Distance MAX_AUTO_DRIVE_PROCESSOR_DISTANCE = Units.Meters.of(5);
+    public static final LinearVelocity MIN_DRIVER_OVERRIDE =TunerConstants.kSpeedAt12Volts.div(10);
+
+    public static final PIDController TRANS_CONTROLLER = new PIDController(
+        4,
+        0,
+        0);
+    public static final Distance AT_POINT_TOLERANCE = Units.Inches.of(0.5);
+
+    public static final ProfiledPIDController ROTATION_CONTROLLER = new ProfiledPIDController(
+        3, 0, 0, new TrapezoidProfile.Constraints(Units.DegreesPerSecond.of(360).in(DegreesPerSecond),
+            Math.pow(Units.DegreesPerSecond.of(360).in(DegreesPerSecond), 2)));
+    public static final Angle AT_ROTATION_TOLERANCE = Units.Degrees.of(1);
+
+    public static final Distance AUTO_ALIGNMENT_TOLERANCE = Units.Inches.of(1);
+
+    static {
+      TRANS_CONTROLLER.setTolerance(AT_POINT_TOLERANCE.in(Units.Meters));
+
+      ROTATION_CONTROLLER.enableContinuousInput(0, 360);
+      ROTATION_CONTROLLER.setTolerance(AT_ROTATION_TOLERANCE.in(Units.Degrees));
+    }
+
+    public static HolonomicDriveController TELEOP_AUTO_ALIGN_CONTROLLER = new HolonomicDriveController(
+        TRANS_CONTROLLER,
+        TRANS_CONTROLLER,
+        ROTATION_CONTROLLER);
+  }
+  
+
 }

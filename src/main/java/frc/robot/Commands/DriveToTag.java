@@ -44,7 +44,8 @@ public class DriveToTag extends Command {
 
   @Override
   public void execute() {
-    // Tells the limelight where we are on the field
+    // Tells the limelight where we are on the field 
+    /* 
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[0],
         drivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[1],
@@ -55,6 +56,7 @@ public class DriveToTag extends Command {
     if (estimatedPose.isPresent()) {
       drivetrain.addVisionMeasurement(estimatedPose.get().pose, estimatedPose.get().timestampSeconds);
     }
+    */
 
     visionSpeeds = vision.calculateChassisSpeeds(targetPosition, drivetrain.getState().Pose);
     drivetrain.setControl(visionRequest.withSpeeds(visionSpeeds));
