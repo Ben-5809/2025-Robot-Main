@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start to L4 1"
+            "pathName": "Vision Test 1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "L4"
+            "name": "Align with Vision Right"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "L4 1 to side"
+            "pathName": "Vision Test 2"
           }
         }
       ]
