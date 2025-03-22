@@ -6,21 +6,23 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Stripper extends SubsystemBase {
   //Motor and sensor setup
-  private TalonSRX stripperMotor;
+  private SparkMax stripperMotor;
 
   public Stripper() {
-    stripperMotor = new TalonSRX(Constants.StripperConstants.stripperID);
+    stripperMotor = new SparkMax(Constants.StripperConstants.stripperID, MotorType.kBrushless);
   }
 
   //Applies a set voltage to the motors
   public void setMotorVoltage (double voltageApplied) {
-    stripperMotor.set(ControlMode.Current, voltageApplied);
+    stripperMotor.setVoltage(voltageApplied);
   }
 
   @Override
