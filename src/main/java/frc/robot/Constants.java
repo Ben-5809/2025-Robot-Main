@@ -103,6 +103,8 @@ public final class Constants {
         public static final double L3 = 30.35;
         public static final double L4 = 52.55;
         public static final double home = -0.05;
+        public static final double Algae1 = 18;
+        public static final double Algae2 = 28;
 
         public static final ChassisSpeeds test = new ChassisSpeeds(1,1,1);
     }

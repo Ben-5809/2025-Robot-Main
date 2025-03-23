@@ -55,7 +55,6 @@ public class Intake extends Command {
   @Override
   public boolean isFinished() {
     if (System.currentTimeMillis() > (startTime+87.3) ) {
-      
       return true;
     }
     else {
