@@ -22,7 +22,7 @@ public class UpdateVision extends Command {
     this.subDrivetrain = drivetrain;
     this.poseEstimator = poseEstimator;
     
-    addRequirements(drivetrain, poseEstimator);
+    addRequirements(poseEstimator);
   }
 
   // Called when the command is initially scheduled.
