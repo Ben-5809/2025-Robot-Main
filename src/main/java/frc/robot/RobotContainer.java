@@ -26,7 +26,7 @@ import frc.robot.subsystems.CoralEndEffector;
 import frc.robot.subsystems.ElevatorSub;
 import frc.robot.subsystems.LEDsub;
 import frc.robot.subsystems.VisionSubsystem;
-//import frc.robot.subsystems.Stripper;
+import frc.robot.subsystems.Stripper;
 
 
 public class RobotContainer {
@@ -50,7 +50,7 @@ public class RobotContainer {
     private final LEDsub ledSub = new LEDsub();
     private final CoralEndEffector coralEndEffector = new CoralEndEffector();
     private final VisionSubsystem visionSubsystem = new VisionSubsystem();
-    //private final Stripper stripper = new Stripper();
+    private final Stripper stripper = new Stripper();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -110,8 +110,8 @@ public class RobotContainer {
         operatorController.b().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
         operatorController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25));
 
-        //operatorController.leftTrigger(.9).whileTrue(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage));
-        //operatorController.rightTrigger(.9).whileTrue(new ScoreBarge(coralEndEffector, stripper, Constants.CoralEndEffectorCons.outtakeBall, Constants.StripperConstants.outtakeVoltage));
+        operatorController.leftTrigger(.9).whileTrue(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage));
+        operatorController.rightTrigger(.9).whileTrue(new ScoreBarge(coralEndEffector, stripper, Constants.CoralEndEffectorCons.outtakeBall, Constants.StripperConstants.outtakeVoltage));
 
         operatorController.povRight().onTrue(new AutoAlign(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1]));
         operatorController.povLeft().onTrue(new AutoAlign(visionSubsystem, drivetrain, true, Constants.VisionConstants.LIMELIGHT_NAMES[0]));
