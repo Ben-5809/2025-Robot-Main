@@ -44,7 +44,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
     private double timeFromLastUpdate;
     private double lastSimTime;
-;
+
+    private SwerveModuleState lastDesiredSwerveModuleState;
 
     private SwerveModuleState[] lastDesiredStates = new SwerveModuleState[]{new SwerveModuleState(),
         new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
