@@ -12,21 +12,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoAlign extends Command {
+public class OwPain extends Command {
   private VisionSubsystem vision;
   private CommandSwerveDrivetrain drivetrain;
-  private boolean goLeft;
-  private String Limelight;
+  private Pose2d destination;
 
   private Pose2d targetPose;
   private ChassisSpeeds zero = new ChassisSpeeds(0, 0, 0);
   private SwerveRequest.ApplyRobotSpeeds zeroRequest = new SwerveRequest.ApplyRobotSpeeds();
 
-  public AutoAlign(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain, boolean goLeft, String Limelight) {
+  public OwPain(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain, Pose2d destination) {
     this.vision = vision;
     this.drivetrain = drivetrain;
-    this.goLeft = goLeft;
-    this.Limelight = Limelight;
+    this.destination = destination;
 
     addRequirements(drivetrain);
   }
@@ -34,7 +32,7 @@ public class AutoAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPose = vision.getTargetPos(Limelight, goLeft);
+    targetPose = destination;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import com.ctre.phoenix6.hardware.*;
 
-
 import com.ctre.phoenix6.SignalLogger;
 
 public class Robot extends TimedRobot {
@@ -59,7 +58,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    m_robotContainer.setMegaTag2(true);
+    m_robotContainer.setMegaTag2(false);
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 

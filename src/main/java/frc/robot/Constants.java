@@ -9,7 +9,9 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -26,6 +28,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.generated.TunerConstants;
 
 import com.ctre.phoenix.led.CANdleConfiguration;
@@ -36,6 +39,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import javax.sound.sampled.Line;
 
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
@@ -205,7 +210,8 @@ public final class Constants {
      * before being accepted
      */
     public static final double AREA_THRESHOLD = 0.1;
-
+    
+    public static final PathConstraints ampConstraints = new PathConstraints(2, 2, 6.28, 6.28);
     }
 
   public static class constField {
@@ -379,7 +385,7 @@ public final class Constants {
     public static final Distance MAX_AUTO_DRIVE_CORAL_STATION_DISTANCE = Units.Meters.of(10);
     public static final Distance MAX_AUTO_DRIVE_REEF_DISTANCE = Units.Meters.of(1);
     public static final Distance MAX_AUTO_DRIVE_PROCESSOR_DISTANCE = Units.Meters.of(5);
-    public static final LinearVelocity MIN_DRIVER_OVERRIDE =TunerConstants.kSpeedAt12Volts.div(10);
+    public static final LinearVelocity MIN_DRIVER_OVERRIDE = TunerConstants.kSpeedAt12Volts.div(10);
 
     public static final PIDController TRANS_CONTROLLER = new PIDController(
         4,

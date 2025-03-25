@@ -34,9 +34,9 @@ public class UpdateVision extends Command {
   public void execute() {
     // Tells the limelight where we are on the field
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[0],
-        subDrivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
+        (subDrivetrain.getRotation3d().getZ() * 57.2958), 0, 0, 0, 0, 0);
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[1],
-        subDrivetrain.getRotation3d().getZ() * 57.2958, 0, 0, 0, 0, 0);
+        (subDrivetrain.getRotation3d().getZ() * 57.2958), 0, 0, 0, 0, 0);
     AngularVelocity gyroRate = subDrivetrain.getPigeon2().getAngularVelocityZWorld().getValue();
 
     Optional<PoseEstimate> estimatedPose = poseEstimator.determinePoseEstimate(gyroRate);

@@ -18,8 +18,10 @@ public class DriveToTag extends Command {
   private final String limelight;
 
   private Pose2d targetPosition;
-  private SwerveRequest.ApplyRobotSpeeds visionRequest;
+  private SwerveRequest.ApplyRobotSpeeds visionRequest = new SwerveRequest.ApplyRobotSpeeds();
   private ChassisSpeeds visionSpeeds;
+  private ChassisSpeeds zero = new ChassisSpeeds(0,0,0);
+  private SwerveRequest.ApplyRobotSpeeds zeroRequest = new SwerveRequest.ApplyRobotSpeeds();
 
   public DriveToTag(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain, boolean goLeft, String LimelightName) {
     this.vision = vision;
@@ -48,7 +50,7 @@ public class DriveToTag extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    drivetrain.setControl(null);
+    drivetrain.setControl(zeroRequest.withSpeeds(zero));
   }
 }
 
