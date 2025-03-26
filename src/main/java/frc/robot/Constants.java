@@ -298,7 +298,7 @@ public final class Constants {
       public static final Pose2d REEF_I = new Pose2d(5.255, 5.029, Rotation2d.fromDegrees(-120));
       public static final Pose2d REEF_J = new Pose2d(4.973, 5.185, Rotation2d.fromDegrees(-120));
       public static final Pose2d REEF_K = new Pose2d(4.007, 5.185, Rotation2d.fromDegrees(-60));
-      public static final Pose2d REEF_L = new Pose2d(3.723, 5.049, Rotation2d.fromDegrees(-60));
+      public static final Pose2d REEF_L = new Pose2d(3.728, 5.014, Rotation2d.fromDegrees(-60));
 
       private static final List<Pose2d> BLUE_REEF_POSES = List.of(REEF_A, REEF_B, REEF_C, REEF_D, REEF_E,
           REEF_F, REEF_G, REEF_H, REEF_I, REEF_J, REEF_K, REEF_L);
