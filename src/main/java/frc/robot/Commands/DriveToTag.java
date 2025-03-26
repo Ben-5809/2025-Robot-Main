@@ -34,7 +34,7 @@ public class DriveToTag extends Command {
 
   @Override
   public void initialize() {
-    targetPosition = vision.getTargetPos(limelight, goLeft);
+    targetPosition = vision.getTargetPos(goLeft);
   }
 
   @Override

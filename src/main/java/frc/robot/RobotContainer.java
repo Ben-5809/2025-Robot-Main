@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -16,8 +17,10 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.*;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
@@ -56,8 +59,6 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        NamedCommands.registerCommand("Align with Vision Left", new AutoAlign(visionSubsystem, drivetrain, true, Constants.VisionConstants.LIMELIGHT_NAMES[0]));
-        NamedCommands.registerCommand("Align with Vision Right", new AutoAlign(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1]));
         NamedCommands.registerCommand("L1", new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedBlue, -4));
         NamedCommands.registerCommand("L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
@@ -69,14 +70,10 @@ public class RobotContainer {
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         NamedCommands.registerCommand("Intake", new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
 
-        autoChooser = AutoBuilder.buildAutoChooser("Sigma");
+        autoChooser = AutoBuilder.buildAutoChooser("Test 1");
         SmartDashboard.putData("Auto Mode", autoChooser);
         
         configureBindings();
-    }
-
-    private Command align() {
-        return AutoBuilder.pathfindToPose(Constants.constField.POSES.REEF_A, Constants.VisionConstants.ampConstraints);
     }
 
     private void configureBindings() {
@@ -93,12 +90,13 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
+        
         /* 
         operatorController.back().and(operatorController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         operatorController.back().and(operatorController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         operatorController.start().and(operatorController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         operatorController.start().and(operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        */        
+        */   
 
         // reset the field-centric heading on left bumper press
         operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -108,15 +106,21 @@ public class RobotContainer {
         //Manual drive for the elevator 
         operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
         operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
-        //operatorController.povUp().whileTrue();
-        operatorController.povUp().whileTrue(align());
+        //operatorController.povUp().whileTrue(
 
+        operatorController.leftTrigger(.9).whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, true));
+
+        /*try {
+            operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindToPose(Constants.constField.POSES.REEF_A, new PathConstraints(2, 2, 6.28, 6.28)));
+        } catch (Exception e) {
+            Commands.print(e.getMessage());
+        }*/
         //Trickshot
         operatorController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkGreen, 19.8).andThen(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedPink, -2)));
         operatorController.b().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
         operatorController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25));
 
-        operatorController.leftTrigger(.9).whileTrue(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage));
+        //operatorController.leftTrigger(.9).whileTrue(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage));
         operatorController.rightTrigger(.9).whileTrue(new ScoreBarge(coralEndEffector, stripper, Constants.CoralEndEffectorCons.outtakeBall, Constants.StripperConstants.outtakeVoltage));
 
         operatorController.povRight().whileTrue(new AutoAlign(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1]));

@@ -46,6 +46,53 @@ import com.ctre.phoenix.led.CANdle.LEDStripType;
 
 //Constants Class for quick change to vars
 public final class Constants {
+
+  public static class SwerveConstants {
+
+    public static final double DRIVE_KP = 0.17105;
+    public static final double DRIVE_KI = 0.0;
+    public static final double DRIVE_KD = 0.0;
+    public static final double DRIVE_KS = 0.045286;
+    public static final double DRIVE_KV = 0.1241075;
+    public static final double DRIVE_KA = 0.005900075;
+    
+    public static final double TURNING_KP = 75.0;
+    public static final double TURNING_KI = 0.0;
+    public static final double TURNING_KD = 0.0;
+    public static final double TURNING_KS = 0.0;
+    public static final double TURNING_KV = 0.0;
+    public static final double TURNING_KA = 0.0;
+
+    public static final double ROTATION_KP = 0.0;
+    public static final double ROTATION_KI = 0.0;
+    public static final double ROTATION_KD = 0.0;
+    public static final double ROTATION_KS = 0.0;
+    public static final double ROTATION_KV = 0.0;
+    public static final double ROTATION_KA = 0.0;
+
+    public static final double TRANSLATION_PP_KP = 4.5;
+    public static final double TRANSLATION_PP_KI = 0.0;
+    public static final double TRANSLATION_PP_KD = 0.0;
+
+    public static final double ROTATION_PP_KP = 2.5;
+    public static final double ROTATION_PP_KI = 0.0;
+    public static final double ROTATION_PP_KD = 0.0;
+
+    public static final double CLOSE_TRANSLATION_PP_KP = 2.5;
+    public static final double CLOSE_TRANSLATION_PP_KI = 0.0;
+    public static final double CLOSE_TRANSLATION_PP_KD = 0.0;
+
+    public static final double CLOSE_ROTATION_PP_KP = 2.0;
+    public static final double CLOSE_ROTATION_PP_KI = 0.0;
+    public static final double CLOSE_ROTATION_PP_KD = 0.0;
+
+    public static final double MAX_LINEAR_VELOCITY = 2.5;
+    public static final double MAX_LINEAR_ACCELERATION = 2.0;
+    public static final double MAX_ANGULAR_VELOCITY = 2 * Math.PI;
+    public static final double MAX_ANGULAR_ACCELERATION = 4 * Math.PI;
+
+}
+
     //Elavtor Subsystem Contstants and Config objects
     public static class ElevatorCons {
         //Motor config object for elevator drive motors. Will be applied to both
@@ -195,9 +242,9 @@ public final class Constants {
      * </p>
      * <b>Units:</b> Meters
      */
-    public static final double MEGA_TAG1_STD_DEVS_POSITION = .3;
+    public static final double MEGA_TAG1_STD_DEVS_POSITION = .1;//.3;
 
-    public static final double MEGA_TAG1_STD_DEVS_HEADING = .1;
+    public static final double MEGA_TAG1_STD_DEVS_HEADING = .04;//.1;
     /**
      * <p>
      * Maximum rate of rotation before we begin rejecting pose updates
@@ -245,8 +292,8 @@ public final class Constants {
       public static final Pose3d SCORING_ELEMENT_NOT_COLLECTED = new Pose3d(0, 0, -1, Rotation3d.kZero);
 
       // BRANCH POSES
-      public static final Pose2d REEF_A = new Pose2d(3.201, 4.191, Rotation2d.fromDegrees(0));
-      public static final Pose2d REEF_B = new Pose2d(3.201, 3.860, Rotation2d.fromDegrees(0));
+      public static final Pose2d REEF_A = new Pose2d(3.241, 4.191, Rotation2d.fromDegrees(0));
+      public static final Pose2d REEF_B = new Pose2d(3.241, 3.860, Rotation2d.fromDegrees(0));
       public static final Pose2d REEF_C = new Pose2d(3.700, 2.992, Rotation2d.fromDegrees(60));
       public static final Pose2d REEF_D = new Pose2d(3.982, 2.828, Rotation2d.fromDegrees(60));
       public static final Pose2d REEF_E = new Pose2d(4.987, 2.830, Rotation2d.fromDegrees(120));

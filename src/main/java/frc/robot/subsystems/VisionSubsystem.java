@@ -228,8 +228,12 @@ public class VisionSubsystem extends SubsystemBase {
     return new ChassisSpeeds(vx, vy, angularSpeed);
   }
 
-  public double getTagID (String LimelightName) {
-    return LimelightHelpers.getFiducialID(LimelightName);
+  public double getTagIDRight () {
+    return LimelightHelpers.getFiducialID(Constants.VisionConstants.LIMELIGHT_NAMES[0]);
+  }
+
+  public double getTagIDLeft () {
+    return LimelightHelpers.getFiducialID(Constants.VisionConstants.LIMELIGHT_NAMES[1]);
   }
 
   /**
@@ -241,60 +245,60 @@ public class VisionSubsystem extends SubsystemBase {
    *  
    *  @return Pose2d of target
    */
-  public Pose2d getTargetPos (String LimelightName, boolean isLeft) {
+  public Pose2d getTargetPos (boolean isLeft) {
     if (isLeft) {
-      if (getTagID(LimelightName) == 18) {
+      if (getTagIDRight() == 18 || getTagIDLeft() == 18) {
         return Constants.constField.POSES.REEF_A;
-      } if (getTagID(LimelightName) == 17) {
+      } if (getTagIDRight() == 17 || getTagIDLeft() == 17) {
         return Constants.constField.POSES.REEF_C;
-      } if (getTagID(LimelightName) == 22) {
+      } if (getTagIDRight() == 22 || getTagIDLeft() == 22) {
         return Constants.constField.POSES.REEF_E;
-      } if (getTagID(LimelightName) == 21) {
+      } if (getTagIDRight() == 21 || getTagIDLeft() == 21) {
         return Constants.constField.POSES.REEF_G;
-      } if (getTagID(LimelightName) == 20) {
+      } if (getTagIDRight() == 20 || getTagIDLeft() == 20) {
         return Constants.constField.POSES.REEF_I;
-      } if (getTagID(LimelightName) == 19) {
+      } if (getTagIDRight() == 19 || getTagIDLeft() == 19) {
         return Constants.constField.POSES.REEF_K;
-      } if (getTagID(LimelightName) == 7) {
+      } if (getTagIDRight() == 7 || getTagIDLeft() == 7) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_A);
-      } if (getTagID(LimelightName) == 8) {
+      } if (getTagIDRight() == 8 || getTagIDLeft() == 8) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_C);
-      } if (getTagID(LimelightName) == 9) {
+      } if (getTagIDRight() == 9 || getTagIDLeft() == 9) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_E);
-      } if (getTagID(LimelightName) == 10) {
+      } if (getTagIDRight() == 10 || getTagIDLeft() == 10) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_G);
-      } if (getTagID(LimelightName) == 11) {
+      } if (getTagIDRight() == 11 || getTagIDLeft() == 11) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_I);
-      } if (getTagID(LimelightName) == 6) {
+      } if (getTagIDRight() == 6 || getTagIDLeft() == 6) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_K);
       } else  {
         System.out.println("No Tag Detected. No Target Pose Returned");
-        return new Pose2d();
+        return new Pose2d(0,0, new Rotation2d(0,0));
       }
     } else {
-      if (getTagID(LimelightName) == 18) {
+      if (getTagIDRight() == 18 || getTagIDLeft() == 18) {
         return Constants.constField.POSES.REEF_B;
-      } if (getTagID(LimelightName) == 17) {
+      } if (getTagIDRight() == 17 || getTagIDLeft() == 17) {
         return Constants.constField.POSES.REEF_D;
-      } if (getTagID(LimelightName) == 22) {
+      } if (getTagIDRight() == 22 || getTagIDLeft() == 22) {
         return Constants.constField.POSES.REEF_F;
-      } if (getTagID(LimelightName) == 21) {
+      } if (getTagIDRight() == 21 || getTagIDLeft() == 21) {
         return Constants.constField.POSES.REEF_H;
-      } if (getTagID(LimelightName) == 20) {
+      } if (getTagIDRight() == 20 || getTagIDLeft() == 20) {
         return Constants.constField.POSES.REEF_J;
-      } if (getTagID(LimelightName) == 19) {
+      } if (getTagIDRight() == 19 || getTagIDLeft() == 19) {
         return Constants.constField.POSES.REEF_L;
-      } if (getTagID(LimelightName) == 7) {
+      } if (getTagIDRight() == 7 || getTagIDLeft() == 7) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_B);
-      } if (getTagID(LimelightName) == 8) {
+      } if (getTagIDRight() == 8 || getTagIDLeft() == 8) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_D);
-      } if (getTagID(LimelightName) == 9) {
+      } if (getTagIDRight() == 9 || getTagIDLeft() == 9) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_F);
-      } if (getTagID(LimelightName) == 10) {
+      } if (getTagIDRight() == 10 || getTagIDLeft() == 10) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_H);
-      } if (getTagID(LimelightName) == 11) {
+      } if (getTagIDRight() == 11 || getTagIDLeft() == 11) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_J);
-      } if (getTagID(LimelightName) == 6) {
+      } if (getTagIDRight() == 6 || getTagIDLeft() == 6) {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_L);
       } else  {
         System.out.println("No Tag Detected. No Target Pose Returned");

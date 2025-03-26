@@ -34,7 +34,7 @@ public class AutoAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPose = vision.getTargetPos(Limelight, goLeft);
+    targetPose = vision.getTargetPos(goLeft);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

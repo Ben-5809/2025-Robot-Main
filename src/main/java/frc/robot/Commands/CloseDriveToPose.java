@@ -1,36 +1,47 @@
-/*package frc.robot.Commands;
+package frc.robot.Commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.VisionSubsystem;
+
+import static edu.wpi.first.units.Units.Inches;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class CloseDriveToPose extends Command {
 
     private final CommandSwerveDrivetrain swerve;
-    private Pose2d poseFinal, currentPose, prevPose;
+    private VisionSubsystem vision;
+    private boolean goLeft;
+    private Pose2d currentPose, prevPose;
+    private Pose2d poseFinal = new Pose2d();
 
     private final PIDController xTranslationPID, yTranslationPID;
     private final PIDController rotationPID;
 
     private final double POSE_TRANSLATION_UPDATE_TOLERANCE = 0.01;
-    private final double POSE_ROTATION_UPDATE_TOLERANCE = 0.01; // TODO ADJUST
-    private final double CHECKING_PERIOD = 0.15;
+    private final double POSE_ROTATION_UPDATE_TOLERANCE = 0.01; 
+    private final double CHECKING_PERIOD = 1;
     private final double COOL_DOWN = 0.35;
 
     private boolean cooldown;
 
     private final Timer timer;
 
-    public CloseDriveToPose(CommandSwerveDrivetrain swerve, Pose2d finalPose) {
+    private Distance zero = Distance.ofBaseUnits(0, Inches);
+
+    public CloseDriveToPose(CommandSwerveDrivetrain swerve, VisionSubsystem vision, boolean goLeft) {
         this.swerve = swerve;
-        this.poseFinal = finalPose;
+        this.vision = vision;
+        this.goLeft = goLeft;
         this.xTranslationPID = new PIDController(Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KP, 
                                                 Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KI, 
                                                 Constants.SwerveConstants.CLOSE_TRANSLATION_PP_KD);
@@ -72,6 +83,8 @@ public class CloseDriveToPose extends Command {
         timer.reset();
         timer.start();
         SmartDashboard.putBoolean("Updated Checking Period", false);
+
+        poseFinal = vision.getTargetPos(goLeft);
     }
 
     @Override
@@ -114,8 +127,14 @@ public class CloseDriveToPose extends Command {
         boolean yTranslationUpdated = Math.abs(currentPose.getY() - prevPose.getY()) > POSE_TRANSLATION_UPDATE_TOLERANCE;
         boolean rotationUpdated = Math.abs(currentPose.getRotation().getRadians() - prevPose.getRotation().getRadians()) > POSE_ROTATION_UPDATE_TOLERANCE;
 
-        return (xTranslationDone && yTranslationDone && rotationDone) || 
-               (!(xTranslationUpdated) && !(yTranslationUpdated) && !(rotationUpdated));
+        if ((xTranslationDone && yTranslationDone && rotationDone) || 
+            (!(xTranslationUpdated) && !(yTranslationUpdated) && !(rotationUpdated)) ||
+            (poseFinal.getX() == 0)) {
+              return true;
+            }
+        else {
+          return false;
+        }
     }
     
     @Override
@@ -124,4 +143,4 @@ public class CloseDriveToPose extends Command {
         timer.stop();
         cooldown = false;
     }
-}*/
+}
