@@ -2,7 +2,11 @@
   "robotWidth": 0.86995,
   "robotLength": 0.86995,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Barge Side L4 3",
+    "L4 + Double Barge Score",
+    "Processor Side L4 3"
+  ],
   "autoFolders": [],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 5.0,

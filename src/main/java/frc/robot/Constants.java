@@ -48,7 +48,7 @@ public final class Constants {
     public static final double DRIVE_KI = 0.0;
     public static final double DRIVE_KD = 0.0;
     public static final double DRIVE_KS = 0.045286;
-    public static final double DRIVE_KV = 0.1241075;
+    public static final double DRIVE_KV = 0.1441075;
     public static final double DRIVE_KA = 0.005900075;
     
     public static final double TURNING_KP = 75.0;
@@ -65,23 +65,23 @@ public final class Constants {
     public static final double ROTATION_KV = 0.0;
     public static final double ROTATION_KA = 0.0;
 
-    public static final double TRANSLATION_PP_KP = 4.5;
-    public static final double TRANSLATION_PP_KI = 0.0;
+    public static final double TRANSLATION_PP_KP = 4.8;
+    public static final double TRANSLATION_PP_KI = 0.2;
     public static final double TRANSLATION_PP_KD = 0.0;
 
-    public static final double ROTATION_PP_KP = 2.5;
+    public static final double ROTATION_PP_KP = 2.6;
     public static final double ROTATION_PP_KI = 0.0;
     public static final double ROTATION_PP_KD = 0.0;
 
-    public static final double CLOSE_TRANSLATION_PP_KP = 2.5;
-    public static final double CLOSE_TRANSLATION_PP_KI = 0.0;
+    public static final double CLOSE_TRANSLATION_PP_KP = 2.9;
+    public static final double CLOSE_TRANSLATION_PP_KI = 0.4;
     public static final double CLOSE_TRANSLATION_PP_KD = 0.0;
 
-    public static final double CLOSE_ROTATION_PP_KP = 2.0;
+    public static final double CLOSE_ROTATION_PP_KP = 2.1;
     public static final double CLOSE_ROTATION_PP_KI = 0.0;
     public static final double CLOSE_ROTATION_PP_KD = 0.0;
 
-    public static final double MAX_LINEAR_VELOCITY = 2.5;
+    public static final double MAX_LINEAR_VELOCITY = 2.6;
     public static final double MAX_LINEAR_ACCELERATION = 2.0;
     public static final double MAX_ANGULAR_VELOCITY = 2 * Math.PI;
     public static final double MAX_ANGULAR_ACCELERATION = 4 * Math.PI;

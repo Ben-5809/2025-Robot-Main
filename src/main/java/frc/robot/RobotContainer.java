@@ -65,6 +65,11 @@ public class RobotContainer {
             .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
         NamedCommands.registerCommand("Intake", new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
+        NamedCommands.registerCommand("Score L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
+            .andThen(new WaitCommand(0.16)));
+        NamedCommands.registerCommand("Home", new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
+
 
         autoChooser = AutoBuilder.buildAutoChooser("Test 1");
         SmartDashboard.putData("Auto Mode", autoChooser);

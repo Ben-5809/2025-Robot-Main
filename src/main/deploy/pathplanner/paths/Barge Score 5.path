@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.248,
-        "y": 3.859
+        "x": 7.79,
+        "y": 5.76
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4195330415972895,
-        "y": 3.8491332851220115
+        "x": 6.67302687012851,
+        "y": 5.049993089061675
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3256147540983605,
-        "y": 3.859
+        "x": 5.21625,
+        "y": 5.048749999999999
       },
       "prevControl": {
-        "x": 2.574942909792072,
-        "y": 3.877315861387674
+        "x": 6.242677175376178,
+        "y": 5.368875606984443
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "L4 + Double Barge Score",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

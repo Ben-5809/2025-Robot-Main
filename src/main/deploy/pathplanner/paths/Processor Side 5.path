@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6372950819672134,
-        "y": 2.2448258196721316
+        "x": 1.053,
+        "y": 0.973
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6930113947915406,
-        "y": 2.805546553063084
+        "x": 1.663371695262491,
+        "y": 1.4271377533538026
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.248,
-        "y": 3.859
+        "x": 3.723,
+        "y": 3.021
       },
       "prevControl": {
-        "x": 2.662198052886798,
-        "y": 3.1108409545982147
+        "x": 3.2864471941864926,
+        "y": 2.7131655396108236
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.0,
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Processor Side L4 3",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 55.0
   },
   "useDefaultConstraints": true
 }
