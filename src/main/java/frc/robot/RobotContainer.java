@@ -15,6 +15,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.*;
@@ -78,17 +79,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
-
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
         
@@ -98,44 +88,21 @@ public class RobotContainer {
         operatorController.start().and(operatorController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         operatorController.start().and(operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         */   
+         
+        //---------------------------------------------NEW CONTROLS--------------------------------------------------------------------
+        drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
 
-        // reset the field-centric heading on left bumper press
-        operatorController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
-        drivetrain.registerTelemetry(logger::telemeterize);
-
-        //Manual drive for the elevator 
-        operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
-        operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
-        //operatorController.povUp().whileTrue(
-
-        operatorController.leftTrigger(.9).whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, true));
-        operatorController.rightTrigger(.9).whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, false));
-
-        /*try {
-            operatorController.leftTrigger(.9).whileTrue(AutoBuilder.pathfindToPose(Constants.constField.POSES.REEF_A, new PathConstraints(2, 2, 6.28, 6.28)));
-        } catch (Exception e) {
-            Commands.print(e.getMessage());
-        }*/
-        //Trickshot
-        operatorController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkGreen, 19.8).andThen(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedPink, -2)));
-        operatorController.b().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
-        operatorController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25));
-
-        //operatorController.leftTrigger(.9).whileTrue(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage));
-        //operatorController.rightTrigger(.9).whileTrue(new ScoreBarge(coralEndEffector, stripper, Constants.CoralEndEffectorCons.outtakeBall, Constants.StripperConstants.outtakeVoltage));
-
-        //driverController.y().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -4));
         driverController.a().onTrue(new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
         driverController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 0));
-        driverController.x().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 4));
+        driverController.leftTrigger(.9).onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
+        driverController.x().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -1.5));
 
-        //Elevator controller commands
-         
-        driverController.leftTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L1)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
+        driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
         driverController.rightTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L2)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
             .andThen(new WaitCommand(0.16))
@@ -148,54 +115,10 @@ public class RobotContainer {
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
             .andThen(new WaitCommand(0.16))
             .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
-        
-        /* 
-        //---------------------------------------------NEW CONTROLS--------------------------------------------------------------------
-        drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
 
-        driverController.a().onTrue(new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
-        driverController.b().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
-        driverController.x().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -1.5));
-
-        driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
-
-        driverController.rightBumper().onTrue(new AutoAlign(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1])
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.L4))
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.leftBumper().onTrue(new AutoAlign(visionSubsystem, drivetrain, true, Constants.VisionConstants.LIMELIGHT_NAMES[0])
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.L4))
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.rightTrigger(.9).onTrue(new AutoAlign(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1])
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.L3))
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 4))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.leftTrigger(.9).onTrue(new AutoAlign(visionSubsystem, drivetrain, true, Constants.VisionConstants.LIMELIGHT_NAMES[0])
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.L3))
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 4))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.povRight().onTrue(new AutoAlign(visionSubsystem, drivetrain, false, Constants.VisionConstants.LIMELIGHT_NAMES[1])
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.L2))
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 4))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.povLeft().onTrue(new AutoAlign(visionSubsystem, drivetrain, true, Constants.VisionConstants.LIMELIGHT_NAMES[0])
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.L2))
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 4))
-            .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-
+        driverController.povLeft().whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, true));
+        driverController.povRight().whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, false));
+    
 
         //----------OPERATOR CONTROLS----------
         operatorController.leftTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedPink, Constants.ElevatorCons.L4));
@@ -204,8 +127,7 @@ public class RobotContainer {
             .andThen(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage)));
         operatorController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkBlue, Constants.ElevatorCons.Algae2)
             .andThen(new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage)));
-        
-                
+           
         //Manual drive for the elevator 
         operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
         operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
@@ -215,7 +137,10 @@ public class RobotContainer {
             new IntakeBall(coralEndEffector, stripper, 0, 0)));
 
         operatorController.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-        */
+
+        drivetrain.applyRequest(() -> drive.withVelocityX(-operatorController.getLeftX() * 0.5));
+        drivetrain.applyRequest(() -> drive.withVelocityY(-operatorController.getLeftY() * 0.5));
+        drivetrain.applyRequest(() -> drive.withRotationalRate(-operatorController.getRightX() * 0.5));
     }
 
     public Command getAutonomousCommand() {

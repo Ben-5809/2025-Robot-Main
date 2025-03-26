@@ -4,18 +4,17 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Stripper extends SubsystemBase {
   //Motor and sensor setup
-  private SparkMax stripperMotor;
+  private TalonFX stripperMotor;
 
   public Stripper() {
-    stripperMotor = new SparkMax(Constants.StripperConstants.stripperID, MotorType.kBrushless);
+    stripperMotor = new TalonFX(Constants.StripperConstants.stripperID);
   }
 
   //Applies a set voltage to the motors
