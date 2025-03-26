@@ -289,16 +289,16 @@ public final class Constants {
       // BRANCH POSES
       public static final Pose2d REEF_A = new Pose2d(3.241, 4.191, Rotation2d.fromDegrees(0));
       public static final Pose2d REEF_B = new Pose2d(3.241, 3.860, Rotation2d.fromDegrees(0));
-      public static final Pose2d REEF_C = new Pose2d(3.700, 2.992, Rotation2d.fromDegrees(60));
-      public static final Pose2d REEF_D = new Pose2d(3.982, 2.828, Rotation2d.fromDegrees(60));
-      public static final Pose2d REEF_E = new Pose2d(4.987, 2.830, Rotation2d.fromDegrees(120));
-      public static final Pose2d REEF_F = new Pose2d(5.273, 2.995, Rotation2d.fromDegrees(120));
-      public static final Pose2d REEF_G = new Pose2d(5.762, 3.860, Rotation2d.fromDegrees(180));
-      public static final Pose2d REEF_H = new Pose2d(5.762, 4.191, Rotation2d.fromDegrees(180));
-      public static final Pose2d REEF_I = new Pose2d(5.274, 5.056, Rotation2d.fromDegrees(-120));
-      public static final Pose2d REEF_J = new Pose2d(4.988, 5.220, Rotation2d.fromDegrees(-120));
-      public static final Pose2d REEF_K = new Pose2d(3.986, 5.223, Rotation2d.fromDegrees(-60));
-      public static final Pose2d REEF_L = new Pose2d(3.705, 5.049, Rotation2d.fromDegrees(-60));
+      public static final Pose2d REEF_C = new Pose2d(3.723, 3.021, Rotation2d.fromDegrees(60));
+      public static final Pose2d REEF_D = new Pose2d(4.007, 2.865, Rotation2d.fromDegrees(60));
+      public static final Pose2d REEF_E = new Pose2d(4.973, 2.865, Rotation2d.fromDegrees(120));
+      public static final Pose2d REEF_F = new Pose2d(5.255, 3.030, Rotation2d.fromDegrees(120));
+      public static final Pose2d REEF_G = new Pose2d(5.735, 3.860, Rotation2d.fromDegrees(180));
+      public static final Pose2d REEF_H = new Pose2d(5.735, 4.191, Rotation2d.fromDegrees(180));
+      public static final Pose2d REEF_I = new Pose2d(5.255, 5.029, Rotation2d.fromDegrees(-120));
+      public static final Pose2d REEF_J = new Pose2d(4.973, 5.185, Rotation2d.fromDegrees(-120));
+      public static final Pose2d REEF_K = new Pose2d(4.007, 5.185, Rotation2d.fromDegrees(-60));
+      public static final Pose2d REEF_L = new Pose2d(3.723, 5.049, Rotation2d.fromDegrees(-60));
 
       private static final List<Pose2d> BLUE_REEF_POSES = List.of(REEF_A, REEF_B, REEF_C, REEF_D, REEF_E,
           REEF_F, REEF_G, REEF_H, REEF_I, REEF_J, REEF_K, REEF_L);
