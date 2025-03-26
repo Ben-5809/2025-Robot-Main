@@ -4,16 +4,12 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
-
-import static edu.wpi.first.units.Units.Inches;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class CloseDriveToPose extends Command {
@@ -35,8 +31,6 @@ public class CloseDriveToPose extends Command {
     private boolean cooldown;
 
     private final Timer timer;
-
-    private Distance zero = Distance.ofBaseUnits(0, Inches);
 
     public CloseDriveToPose(CommandSwerveDrivetrain swerve, VisionSubsystem vision, boolean goLeft) {
         this.swerve = swerve;
@@ -65,6 +59,7 @@ public class CloseDriveToPose extends Command {
 
     @Override
     public void initialize() {
+        poseFinal = vision.getTargetPos(goLeft);
 
         cooldown = false;
         
@@ -83,8 +78,6 @@ public class CloseDriveToPose extends Command {
         timer.reset();
         timer.start();
         SmartDashboard.putBoolean("Updated Checking Period", false);
-
-        poseFinal = vision.getTargetPos(goLeft);
     }
 
     @Override
@@ -119,6 +112,10 @@ public class CloseDriveToPose extends Command {
 
     @Override
     public boolean isFinished() {
+        if ((poseFinal.getX() == 0)) {
+            return true;
+        } 
+
         boolean xTranslationDone = xTranslationPID.atSetpoint();
         boolean yTranslationDone = yTranslationPID.atSetpoint();
         boolean rotationDone = rotationPID.atSetpoint();
@@ -127,12 +124,9 @@ public class CloseDriveToPose extends Command {
         boolean yTranslationUpdated = Math.abs(currentPose.getY() - prevPose.getY()) > POSE_TRANSLATION_UPDATE_TOLERANCE;
         boolean rotationUpdated = Math.abs(currentPose.getRotation().getRadians() - prevPose.getRotation().getRadians()) > POSE_ROTATION_UPDATE_TOLERANCE;
 
-        if ((xTranslationDone && yTranslationDone && rotationDone) || 
-            (!(xTranslationUpdated) && !(yTranslationUpdated) && !(rotationUpdated)) ||
-            (poseFinal.getX() == 0)) {
-              return true;
-            }
-        else {
+        if ((xTranslationDone && yTranslationDone && rotationDone) || (!(xTranslationUpdated) && !(yTranslationUpdated) && !(rotationUpdated))) {
+            return true;
+        } else {
           return false;
         }
     }

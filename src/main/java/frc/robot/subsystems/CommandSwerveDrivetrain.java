@@ -158,19 +158,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configureAutoBuilder();
-
-        try {
-            pathTest = PathPlannerPath.fromPathFile("Lineup18Left");
-        } catch (FileVersionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }    }
+    }
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -196,19 +184,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         configureAutoBuilder();
-
-        try {
-            pathTest = PathPlannerPath.fromPathFile("Lineup18Left");
-        } catch (FileVersionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }    
+  
     }
 
     /**
@@ -242,20 +218,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 
-        configureAutoBuilder();
-
-        try {
-            pathTest = PathPlannerPath.fromPathFile("Lineup18Left");
-        } catch (FileVersionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }    
+        configureAutoBuilder();  
     }
 
     public void configureAutoBuilder() {

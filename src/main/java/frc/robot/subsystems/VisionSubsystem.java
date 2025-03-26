@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import frc.robot.libaries.LimelightHelpers;
 import frc.robot.libaries.LimelightHelpers.PoseEstimate;
 
-import java.text.BreakIterator;
 import java.util.Optional;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -21,7 +20,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
@@ -42,19 +40,16 @@ public class VisionSubsystem extends SubsystemBase {
 
   private boolean useMegaTag2 = false;
 
-  private Optional<Alliance> ALLIANCE = Optional.empty();
-
   Pose2d desiredAlignmentPose = Pose2d.kZero;
 
-  private ChassisSpeeds zero = new ChassisSpeeds(0,0,0);
 
   SwerveRequest.ApplyRobotSpeeds visionRequest = new SwerveRequest.ApplyRobotSpeeds();
 
-  //int[] invalidIDs = {0-5, 12-15};
+  int[] invalidIDs = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
   
   public VisionSubsystem() {
-    //LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[0], invalidIDs);
-    //LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[1], invalidIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[0], invalidIDs);
+    LimelightHelpers.SetFiducialIDFiltersOverride(Constants.VisionConstants.LIMELIGHT_NAMES[1], invalidIDs);
   }
 
   public PoseEstimate[] getLastPoseEstimates() {
@@ -302,7 +297,7 @@ public class VisionSubsystem extends SubsystemBase {
         return Constants.constField.getRedAlliancePose(Constants.constField.POSES.REEF_L);
       } else  {
         System.out.println("No Tag Detected. No Target Pose Returned");
-        return new Pose2d();
+        return new Pose2d(0,0, new Rotation2d(0,0));
       }
     }  
   }

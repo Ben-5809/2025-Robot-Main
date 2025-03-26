@@ -9,9 +9,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -28,7 +26,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.generated.TunerConstants;
 
 import com.ctre.phoenix.led.CANdleConfiguration;
@@ -39,8 +36,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import javax.sound.sampled.Line;
 
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 
