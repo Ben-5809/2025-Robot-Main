@@ -15,6 +15,8 @@ public class Stripper extends SubsystemBase {
 
   public Stripper() {
     stripperMotor = new TalonFX(Constants.StripperConstants.stripperID);
+
+    stripperMotor.getConfigurator().apply(Constants.StripperConstants.stripper);
   }
 
   //Applies a set voltage to the motors

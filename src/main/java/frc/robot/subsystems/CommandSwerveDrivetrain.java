@@ -30,6 +30,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -303,9 +304,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
+        
         timeFromLastUpdate = Timer.getFPGATimestamp() - lastSimTime;
 		lastSimTime = Timer.getFPGATimestamp();
+
+        SmartDashboard.putNumber("why it dont line up", getModule(0).getEncoder().getAbsolutePosition(true).getValueAsDouble());
     }
 
     private void startSimThread() {

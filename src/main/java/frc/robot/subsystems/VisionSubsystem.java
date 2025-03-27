@@ -336,4 +336,12 @@ public class VisionSubsystem extends SubsystemBase {
         drivetrain.getState().Pose.getTranslation()) <= Constants.TELEOP_AUTO_ALIGN.AUTO_ALIGNMENT_TOLERANCE.in(Units.Meters))
         && isAtRotation(desiredAlignmentPose.getRotation(), drivetrain);
   }
+
+  public void setIMU1 () {
+    LimelightHelpers.SetIMUMode(Constants.VisionConstants.LIMELIGHT_NAMES[1], 1);
+  }
+
+  public void setIMU2 () {
+    LimelightHelpers.SetIMUMode(Constants.VisionConstants.LIMELIGHT_NAMES[1], 2); 
+  }
 }

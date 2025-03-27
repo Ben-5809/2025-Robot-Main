@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.libaries.LimelightHelpers;
 
 import com.ctre.phoenix6.hardware.*;
 
@@ -45,10 +46,13 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     SignalLogger.stop();
+    LimelightHelpers.SetIMUMode(Constants.VisionConstants.LIMELIGHT_NAMES[1], 1);
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    
+  }
 
   @Override
   public void disabledExit() {
@@ -57,8 +61,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
-    m_robotContainer.setMegaTag2(false);
+    LimelightHelpers.SetIMUMode(Constants.VisionConstants.LIMELIGHT_NAMES[1], 2);
+    m_robotContainer.setMegaTag2(true);
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -75,7 +79,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.setMegaTag2(false);
+    LimelightHelpers.SetIMUMode(Constants.VisionConstants.LIMELIGHT_NAMES[1], 2);
+    m_robotContainer.setMegaTag2(true);
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

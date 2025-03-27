@@ -54,6 +54,7 @@ public class Intake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //Don't touch!!!! very finely tuned
     if (System.currentTimeMillis() > (startTime+87.3) ) {
       return true;
     }

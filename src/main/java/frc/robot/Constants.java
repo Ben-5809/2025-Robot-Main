@@ -48,7 +48,7 @@ public final class Constants {
     public static final double DRIVE_KI = 0.0;
     public static final double DRIVE_KD = 0.0;
     public static final double DRIVE_KS = 0.045286;
-    public static final double DRIVE_KV = 0.1441075;
+    public static final double DRIVE_KV = 0.1641075;
     public static final double DRIVE_KA = 0.005900075;
     
     public static final double TURNING_KP = 75.0;
@@ -65,19 +65,19 @@ public final class Constants {
     public static final double ROTATION_KV = 0.0;
     public static final double ROTATION_KA = 0.0;
 
-    public static final double TRANSLATION_PP_KP = 4.8;
-    public static final double TRANSLATION_PP_KI = 0.2;
+    public static final double TRANSLATION_PP_KP = 6;
+    public static final double TRANSLATION_PP_KI = 0;
     public static final double TRANSLATION_PP_KD = 0.0;
 
-    public static final double ROTATION_PP_KP = 2.6;
+    public static final double ROTATION_PP_KP = 4;
     public static final double ROTATION_PP_KI = 0.0;
     public static final double ROTATION_PP_KD = 0.0;
 
-    public static final double CLOSE_TRANSLATION_PP_KP = 2.9;
-    public static final double CLOSE_TRANSLATION_PP_KI = 0.4;
+    public static final double CLOSE_TRANSLATION_PP_KP = 4;
+    public static final double CLOSE_TRANSLATION_PP_KI = 0;
     public static final double CLOSE_TRANSLATION_PP_KD = 0.0;
 
-    public static final double CLOSE_ROTATION_PP_KP = 2.1;
+    public static final double CLOSE_ROTATION_PP_KP = 3;
     public static final double CLOSE_ROTATION_PP_KI = 0.0;
     public static final double CLOSE_ROTATION_PP_KD = 0.0;
 
@@ -112,19 +112,19 @@ public final class Constants {
             elevatorConfig.Feedback.SensorToMechanismRatio = 1/6; 
 
             //Motion Magic® gains
-            elevatorConfig.Slot0.kG = 0.4;
+            elevatorConfig.Slot0.kG = 0.5;
             elevatorConfig.Slot0.kS = 0.23;
-            elevatorConfig.Slot0.kP = 2.0;
+            elevatorConfig.Slot0.kP = 2.1;
             elevatorConfig.Slot0.kI = 0.0;
             elevatorConfig.Slot0.kD = 0.02;
-            elevatorConfig.Slot0.kV = 0.265;
+            elevatorConfig.Slot0.kV = 0.275;
             elevatorConfig.Slot0.kA = 0.002;
             elevatorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
            
             //Motion Magic® motion profile gains
-            elevatorConfig.MotionMagic.MotionMagicCruiseVelocity = 52;
-            elevatorConfig.MotionMagic.MotionMagicAcceleration = 120;
-            elevatorConfig.MotionMagic.MotionMagicJerk = 800;
+            elevatorConfig.MotionMagic.MotionMagicCruiseVelocity = 120;
+            elevatorConfig.MotionMagic.MotionMagicAcceleration = 240;
+            elevatorConfig.MotionMagic.MotionMagicJerk = 2400;
         }
         //Another set of motor configs for testing
         public static TalonFXConfiguration testConfigs = new TalonFXConfiguration();
@@ -147,10 +147,10 @@ public final class Constants {
         public static final double L1 = 10;
         public static final double L2 = 17.2;
         public static final double L3 = 30.35;
-        public static final double L4 = 52.55;
+        public static final double L4 = 52.25;
         public static final double home = -0.05;
-        public static final double Algae1 = 18;
-        public static final double Algae2 = 28;
+        public static final double Algae1 = 14;
+        public static final double Algae2 = 25.5;
     }
 
     public static class CANdleCons {
@@ -201,15 +201,23 @@ public final class Constants {
         public static final double L1Voltage = 4.0;
         public static final double midLVoltage = 4.0;
         public static final double L4Voltage = 4.0;
-        public static final double intakeBall = 2;
-        public static final double outtakeBall = 1;
+        public static final double intakeBall = 4;
+        public static final double outtakeBall = 0;
     }
     
     public static class StripperConstants {
+      public static final TalonFXConfiguration stripper = new TalonFXConfiguration();
+        static {
+            //Sets the neutral mode of endeffector motor to brake. This is so coral does not slip out
+            stripper.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            //Sets it to inverted. This is because of the belting 
+            stripper.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        }
+
       public static final int stripperID = 16;
 
       public static final double intakeVoltage = 2;
-      public static final double outtakeVoltage = 1.4;
+      public static final double outtakeVoltage = -4;
     }
   
     public static class VisionConstants {
@@ -297,7 +305,7 @@ public final class Constants {
       public static final Pose2d REEF_H = new Pose2d(5.735, 4.191, Rotation2d.fromDegrees(180));
       public static final Pose2d REEF_I = new Pose2d(5.255, 5.029, Rotation2d.fromDegrees(-120));
       public static final Pose2d REEF_J = new Pose2d(4.973, 5.185, Rotation2d.fromDegrees(-120));
-      public static final Pose2d REEF_K = new Pose2d(4.007, 5.185, Rotation2d.fromDegrees(-60));
+      public static final Pose2d REEF_K = new Pose2d(4.046, 5.185, Rotation2d.fromDegrees(-60));
       public static final Pose2d REEF_L = new Pose2d(3.728, 5.014, Rotation2d.fromDegrees(-60));
 
       private static final List<Pose2d> BLUE_REEF_POSES = List.of(REEF_A, REEF_B, REEF_C, REEF_D, REEF_E,

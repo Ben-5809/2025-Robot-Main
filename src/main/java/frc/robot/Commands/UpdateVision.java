@@ -3,7 +3,9 @@ package frc.robot.Commands;
 import java.util.Optional;
 
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.libaries.LimelightHelpers;
 import frc.robot.libaries.LimelightHelpers.PoseEstimate;
@@ -34,15 +36,17 @@ public class UpdateVision extends Command {
   public void execute() {
     // Tells the limelight where we are on the field
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[0],
-        (subDrivetrain.getRotation3d().getZ() * 57.2958), 0, 0, 0, 0, 0);
+      (subDrivetrain.getRotation3d().getZ() * Math.toDegrees(1) + 180), 0, 0, 0, 0, 0);
     LimelightHelpers.SetRobotOrientation(VisionConstants.LIMELIGHT_NAMES[1],
-        (subDrivetrain.getRotation3d().getZ() * 57.2958), 0, 0, 0, 0, 0);
+        (subDrivetrain.getRotation3d().getZ() * Math.toDegrees(1) + 180), 0, 0, 0, 0, 0);
     AngularVelocity gyroRate = subDrivetrain.getPigeon2().getAngularVelocityZWorld().getValue();
 
     Optional<PoseEstimate> estimatedPose = poseEstimator.determinePoseEstimate(gyroRate);
     if (estimatedPose.isPresent()) {
       subDrivetrain.addVisionMeasurement(estimatedPose.get().pose, estimatedPose.get().timestampSeconds);
     }
+
+    
   }
 
   // Called once the command ends or is interrupted.
