@@ -14,14 +14,16 @@ public class ElevatorController extends Command {
   private final ElevatorSub elevatorSub;
   private final LEDsub ledSub;
   private final int[] colorApplied;
-  private final double height;;
+  private final double height;
+  private final int slot;
 
-  public ElevatorController(ElevatorSub elevatorSub, LEDsub ledSub, int[] colorApplied, double height) {
+  public ElevatorController(ElevatorSub elevatorSub, LEDsub ledSub, int[] colorApplied, double height, int slot) {
     //Connects the elevator sub to the passthrough in robotContainer
     this.elevatorSub = elevatorSub;
     this.ledSub = ledSub;
     this.colorApplied = colorApplied;
     this.height = height;
+    this.slot = slot;
 
     //Cancels other command if a command 
     addRequirements(elevatorSub);
@@ -30,6 +32,7 @@ public class ElevatorController extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    elevatorSub.setSlotGains(slot);
     //Sets the motion profile to the set position
     elevatorSub.setPosition(height);
   }
@@ -48,7 +51,7 @@ public class ElevatorController extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (elevatorSub.getElevatorPosLeft() > (height - 0.15) &&  elevatorSub.getElevatorPosLeft() < (height + 0.15)) {
+    if (elevatorSub.getElevatorPosLeft() > (height - 0.2) &&  elevatorSub.getElevatorPosLeft() < (height + 0.2)) {
       return true;
       
     }

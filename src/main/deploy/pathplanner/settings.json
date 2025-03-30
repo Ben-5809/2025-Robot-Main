@@ -4,12 +4,14 @@
   "holonomicMode": true,
   "pathFolders": [
     "Barge Side L4 3",
-    "L4 + Double Barge Score",
+    "L3 bar",
     "L3 but stop",
+    "L4 + Double Barge Score",
+    "Push Off",
     "Processor Side L4 3"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 5.0,
+  "defaultMaxVel": 4.75,
   "defaultMaxAccel": 6.5,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

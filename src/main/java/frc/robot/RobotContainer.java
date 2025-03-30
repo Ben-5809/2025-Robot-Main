@@ -59,22 +59,22 @@ public class RobotContainer {
 
     public RobotContainer() {
         NamedCommands.registerCommand("L1", new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedBlue, -4));
-        NamedCommands.registerCommand("L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
+        NamedCommands.registerCommand("L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4, 1)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
             .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        NamedCommands.registerCommand("L3", new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3)
+            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0)));
+        NamedCommands.registerCommand("L3", new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3, 0)
             .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
             .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
+            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0)));
         NamedCommands.registerCommand("Intake", new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
-        NamedCommands.registerCommand("Score L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
-            .andThen(new WaitCommand(0.175)));
-        NamedCommands.registerCommand("Home", new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
+        NamedCommands.registerCommand("Score L4", new  ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4, 1)
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.1))
+            .andThen(new WaitCommand(0.17)));
+        NamedCommands.registerCommand("Home", new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0));
 
 
-        autoChooser = AutoBuilder.buildAutoChooser("Stops");
+        autoChooser = AutoBuilder.buildAutoChooser("Grady Stops Pro");
         SmartDashboard.putData("Auto Mode", autoChooser);
         
         configureBindings();
@@ -101,44 +101,45 @@ public class RobotContainer {
 
         driverController.a().onTrue(new Intake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 1.6));
         driverController.b().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 0));
-        driverController.leftTrigger(.9).onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -3.3));
+        driverController.leftTrigger(.9).onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -4));
         driverController.x().onTrue(new UnjamIntake(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, -1.5));
 
-        driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home));
-        driverController.rightTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L2)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
+        driverController.y().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0));
+        driverController.rightTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L2, 0)
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 2.9))
             .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.leftBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3))
+            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0)));
+        driverController.leftBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L3, 0)
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 2.9))
             .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
-        driverController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4)
-            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25))
+            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0)));
+        driverController.rightBumper().onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedGreen, Constants.ElevatorCons.L4, 1)
+            .andThen(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.1))
             .andThen(new WaitCommand(0.16))
-            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home)));
+            .andThen(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.defualtColor, Constants.ElevatorCons.home, 0)));
 
         driverController.povLeft().whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, true));
         driverController.povRight().whileTrue(new CloseDriveToPose(drivetrain, visionSubsystem, false));
 
         //----------OPERATOR CONTROLS----------
-        operatorController.leftTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedPink, Constants.ElevatorCons.L4));
+        operatorController.leftTrigger(.9).onTrue(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedPink, Constants.ElevatorCons.Barge, 1));
         operatorController.rightTrigger(.9).whileTrue(new ScoreBarge(coralEndEffector, stripper, Constants.CoralEndEffectorCons.outtakeBall, Constants.StripperConstants.outtakeVoltage));
-        operatorController.leftBumper().onTrue(new ParallelCommandGroup(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkBlue, Constants.ElevatorCons.Algae1),
-        (new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage))));
-        operatorController.rightBumper().onTrue(new ParallelCommandGroup(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkBlue, Constants.ElevatorCons.Algae2),
-        (new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage))));
+        operatorController.leftBumper().onTrue(new ParallelCommandGroup(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkBlue, Constants.ElevatorCons.Algae1, 0),
+            (new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage))));
+        operatorController.rightBumper().onTrue(new ParallelCommandGroup(new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.darkBlue, Constants.ElevatorCons.Algae2, 0),
+            (new IntakeBall(coralEndEffector, stripper, Constants.CoralEndEffectorCons.intakeBall, Constants.StripperConstants.intakeVoltage))));
            
         //Manual drive for the elevator 
         operatorController.y().whileTrue(new ElevatorApplyVoltage(elevatorSub, 2));
         operatorController.x().whileTrue(new ElevatorApplyVoltage(elevatorSub, -2));
         operatorController.a().onTrue(new EndEffectorVoltage(coralEndEffector, ledSub, Constants.CANdleCons.saturatedGreen, 3.25));
         operatorController.b().onTrue(new ParallelCommandGroup(
-            new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedPurple, Constants.ElevatorCons.home),
-            new IntakeBall(coralEndEffector, stripper, 0, 1)));
+            new ElevatorController(elevatorSub, ledSub, Constants.CANdleCons.saturatedPurple, Constants.ElevatorCons.home, 0),
+            new IntakeBall(coralEndEffector, stripper, 0, 1.5)));
 
         operatorController.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         operatorController.povDown().onTrue(new UpdateIMU(visionSubsystem));
+        operatorController.povUp().onTrue(new zeroElevator(elevatorSub));
     }
 
     public Command getAutonomousCommand() {
@@ -149,7 +150,7 @@ public class RobotContainer {
         return new UpdateVision(drivetrain, visionSubsystem)
             .withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming).ignoringDisable(true);
     }
-
+    
     public void setMegaTag2(boolean setMegaTag2) {
 
         if (setMegaTag2) {

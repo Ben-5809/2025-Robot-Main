@@ -7,13 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Stop 1"
+            "pathName": "Bar Push 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Stop 2"
+            "pathName": "Bar Push 2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.05
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bar 2"
           }
         },
         {
@@ -29,7 +41,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Stop 3"
+                  "pathName": "Bar 3"
                 }
               },
               {
@@ -54,7 +66,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.125
+                  "waitTime": 1.5
                 }
               }
             ]
@@ -63,13 +75,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Stop 4"
+            "pathName": "Bar 4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.05
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Stop 5"
+            "pathName": "Bar 5"
           }
         },
         {
@@ -85,7 +103,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Stop 6"
+                  "pathName": "Bar 6"
                 }
               },
               {
@@ -110,34 +128,10 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.125
+                  "waitTime": 1.5
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Stop 7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Stop 8"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score L4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Home"
           }
         }
       ]

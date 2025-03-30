@@ -55,6 +55,8 @@ public class ElevatorSub extends SubsystemBase {
     //Applies Talon Configs to the motors
     rightElevatorFollower.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig);
     leftElevatorMaster.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig);
+    rightElevatorFollower.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig.Slot0);
+    leftElevatorMaster.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig.Slot0);
   }
 
   /**
@@ -99,6 +101,21 @@ public class ElevatorSub extends SubsystemBase {
 
   public double getLastHeight () {
     return lastHeight;
+  }
+
+  public void reZero () {
+    rightElevatorFollower.setPosition(0);
+    leftElevatorMaster.setPosition(0);
+  }
+
+  public void setSlotGains (int slot) {
+    if (slot == 0) {
+      rightElevatorFollower.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig.Slot0);
+      leftElevatorMaster.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig.Slot0);
+    } if (slot != 0) {
+      rightElevatorFollower.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig.Slot1);
+      leftElevatorMaster.getConfigurator().apply(Constants.ElevatorCons.elevatorConfig.Slot1);
+    }
   }
 
   @Override
