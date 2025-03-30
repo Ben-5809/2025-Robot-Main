@@ -6,8 +6,6 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import javax.naming.PartialResultException;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -44,8 +42,7 @@ public class RobotContainer {
 
     private final CommandXboxController driverController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
-
-    private boolean isManual = false;
+    private final CommandXboxController testController = new CommandXboxController(2);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final ElevatorSub elevatorSub = new ElevatorSub();
@@ -90,8 +87,10 @@ public class RobotContainer {
         operatorController.start().and(operatorController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         operatorController.start().and(operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         */   
-         
+        
         //---------------------------------------------NEW CONTROLS--------------------------------------------------------------------
+        drivetrain.registerTelemetry(logger::telemeterize);
+
         drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
@@ -140,6 +139,9 @@ public class RobotContainer {
         operatorController.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
         operatorController.povDown().onTrue(new UpdateIMU(visionSubsystem));
         operatorController.povUp().onTrue(new zeroElevator(elevatorSub));
+
+        //-----------------Test Controls-----------------
+        
     }
 
     public Command getAutonomousCommand() {

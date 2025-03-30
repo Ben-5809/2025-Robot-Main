@@ -231,7 +231,7 @@ public final class Constants {
     }
   
     public static class VisionConstants {
-        public static final String[] LIMELIGHT_NAMES = new String[] { "limelight-right", "limelight-left" };
+        public static final String[] LIMELIGHT_NAMES = new String[] { "limelight-right", "limelight-left", "limelight-intake" };
 
     /**
      * <p>
@@ -473,5 +473,25 @@ public final class Constants {
         ROTATION_CONTROLLER);
   }
   
+  public static class SwerveCons {
+    public static final PIDController swerveRotationPID = new PIDController(
+      0.12,
+      0,
+      .015
+    );
 
+    public static final PIDController swerveTranslationPID = new PIDController(
+      0.05,
+      0, 
+      0.1
+    );
+
+    public static final PIDController swerveStrafePID = new PIDController(
+      0.05,
+      0, 
+      0
+    );
+
+    public static final double maxIntakeError = 20;
+  }
 }

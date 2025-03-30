@@ -344,4 +344,12 @@ public class VisionSubsystem extends SubsystemBase {
   public void setIMU2 () {
     LimelightHelpers.SetIMUMode(Constants.VisionConstants.LIMELIGHT_NAMES[1], 2); 
   }
+
+  public boolean getValidCoral () {
+    return LimelightHelpers.getTV(Constants.VisionConstants.LIMELIGHT_NAMES[2]);
+  }
+
+  public double getCoralTX () {
+    return LimelightHelpers.getTX(Constants.VisionConstants.LIMELIGHT_NAMES[2]);
+  }
 }
